@@ -126,5 +126,23 @@ export async function POST(req: Request) {
     });
   }
 
+  // QIS Inbound Pipeline (OS로 전송)
+  const osUrl = process.env.NEXT_PUBLIC_OS_URL || "http://localhost:3000";
+  try {
+    await fetch(`${osUrl}/api/qis/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: title.trim(),
+        context: qBody?.trim(),
+        author_name: user.email,
+        tenant_id: "phalanx" // 기본적으로 phalanx 사용, 추후 쿠키 파싱
+      })
+    });
+    console.log('[QIS] Inbound signal sent to OS');
+  } catch (err) {
+    console.error('[QIS] Failed to send inbound signal', err);
+  }
+
   return NextResponse.json({ question }, { status: 201 });
 }

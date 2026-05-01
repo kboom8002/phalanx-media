@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
+import Link from "next/link";
 import { CheckCircle2, ShieldAlert, ArrowRight, Database, Search, ChevronDown } from "lucide-react";
 import type { Metadata } from 'next';
+import { getTenantConfig } from "@/lib/tenant-config";
 
 // 1. AEO-Friendly Metadata Update for Index
 export const metadata: Metadata = {
@@ -36,6 +38,7 @@ function parseFRA(answer: string) {
 }
 
 export default async function Home() {
+  const tc = getTenantConfig();
   // Fetch SSoT Fact Cards
   const { data: factCards, error } = await supabase
     .from('fact_cards')
@@ -86,34 +89,37 @@ export default async function Home() {
             공식 아카이브 데이터베이스
           </div>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-6">
-            감정에 흔들리지 않고,<br className="hidden md:block" />
-            오직 <span className="text-blue-400">데이터와 사실</span>로 응답합니다.
+            {tc.media.heroTitle.split('，').map((part, i, arr) => (
+              <span key={i}>
+                {part}{i < arr.length - 1 && <><br className="hidden md:block" /></>}
+              </span>
+            ))}
           </h1>
           <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl font-light">
-            궁금한 논란, 부상하는 의제, 그리고 가짜 뉴스에 대한 
-            본부의 공식적인 입장을 가장 먼저 확인하세요.
+            {tc.media.heroSubtitle}
           </p>
 
-          <div className="relative max-w-2xl">
+          <form action="/search" method="GET" className="relative max-w-2xl">
             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
               <Search className="h-6 w-6 text-slate-400" />
             </div>
-            <input 
-              type="text" 
-              className="w-full bg-white/10 border border-slate-700 text-white rounded-2xl py-5 pl-14 pr-6 text-lg placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/15 transition-all shadow-2xl backdrop-blur-sm"
-              placeholder="의혹, 키워드, 정책 이름을 검색해 보세요..."
+            <input
+              type="text"
+              name="q"
+              className="w-full bg-white/10 border border-slate-700 text-white rounded-2xl py-5 pl-14 pr-32 text-lg placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white/15 transition-all shadow-2xl backdrop-blur-sm"
+              placeholder={tc.media.searchPlaceholder}
             />
-            <button className="absolute inset-y-2 right-2 bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition-colors">
-              검증하기
+            <button type="submit" className="absolute inset-y-2 right-2 bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition-colors">
+              검색
             </button>
-          </div>
+          </form>
 
           <div className="mt-6 flex flex-wrap items-center gap-3 text-sm">
             <span className="text-slate-500 font-medium whitespace-nowrap">급상승 검색 의제:</span>
             {["전당대회 룰", "당정분리 위반", "AI 댓글부대 의혹", "재난지원금 오보"].map(k => (
-              <span key={k} className="bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700 hover:border-blue-500 hover:text-blue-400 cursor-pointer transition-colors">
+              <Link key={k} href={`/search?q=${encodeURIComponent(k)}`} className="bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-700 hover:border-blue-500 hover:text-blue-400 cursor-pointer transition-colors">
                 {k}
-              </span>
+              </Link>
             ))}
           </div>
         </div>

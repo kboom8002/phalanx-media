@@ -1,26 +1,132 @@
+/* ── DS-2: Premium Korean Typography (must precede other @import) ── */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&display=swap');
+
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
+/* ── DS-2: Font Tokens ── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Noto Serif KR', 'Batang', Georgia, serif;
+  --font-mono: var(--font-geist-mono, 'Fira Code', 'Consolas', monospace);
+
+  /* ── DS-3: Surface Tokens ── */
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-elevated: var(--surface-elevated);
+
+  /* ── DS-3: Text Tokens ── */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  /* ── DS-3: Accent Tokens (tenant-driven) ── */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+
+  /* ── DS-3: Radius Scale ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-full: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── DS-3: Design Tokens — Light Mode ── */
+:root {
+  /* Surface */
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+  --surface-primary: #FFFFFF;
+  --surface-secondary: #F8F8F6;
+  --surface-elevated: #FFFFFF;
+  --surface-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Text */
+  --text-primary: #1A1A1A;
+  --text-secondary: #4B5563;
+  --text-tertiary: #9CA3AF;
+  --text-inverse: #FFFFFF;
+
+  /* Accent (overridden by tenant CSS vars) */
+  --accent-primary: var(--primary, #4F46E5);
+  --accent-hover: var(--primary-hover, #4338CA);
+  --accent-subtle: var(--primary-subtle, rgba(79, 70, 229, 0.08));
+
+  /* Border */
+  --border-default: #E5E7EB;
+  --border-subtle: #F3F4F6;
+
+  /* Shadow Scale */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.14);
+
+  /* Transition */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+/* ── DS-10: Dark Mode Tokens ── */
+.dark {
+  --background: #0B1120;
+  --foreground: #F1F5F9;
+  --surface-primary: #0F172A;
+  --surface-secondary: #1E293B;
+  --surface-elevated: #1E293B;
+  --surface-overlay: rgba(0, 0, 0, 0.7);
+
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-tertiary: #64748B;
+  --text-inverse: #0F172A;
+
+  --accent-primary: var(--primary, #818CF8);
+  --accent-hover: var(--primary-hover, #6366F1);
+  --accent-subtle: var(--primary-subtle, rgba(129, 140, 248, 0.12));
+
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+/* ── DS-12: Accessibility Base Layer ── */
+@layer base {
+  * {
+    @apply border-[var(--border-default)] outline-none;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  *:focus-visible {
+    @apply ring-2 ring-offset-2 ring-indigo-500;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  /* Improve CJK text rendering */
+  h1, h2, h3, h4, h5, h6 {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
 }

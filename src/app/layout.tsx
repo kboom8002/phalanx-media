@@ -1,41 +1,52 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import { TelemetryProvider } from "@/components/telemetry-provider";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+import { getTenantConfig } from "@/lib/tenant-config";
+import { cookies } from "next/headers";
+import { MobileNav } from "@/components/MobileNav";
+import {
+  Newspaper, BookOpen, Landmark, Trophy, MessageSquare,
+  ChevronDown, ExternalLink
+} from "lucide-react";
+import { StickyHeader } from "@/components/StickyHeader";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
-  title: "VQCP Statesman | 공식 문화정책 데이터 아카이브",
-  description: "선거 및 정책 관련 의혹에 대한 공식적이고 검증된 팩트체크를 제공하는 정책형 미디어 허브입니다.",
-  openGraph: {
-    title: "VQCP Statesman | 문화강국 팩트체크",
-    description: "공식 문서와 데이터 포렌식을 통한 가장 정확한 사실관계 지표.",
-    url: "https://phalanx.co",
-    siteName: "VQCP Statesman",
-    locale: "ko_KR",
-    type: "website",
-  },
+  title: "Phalanx Media Hub | 공식 검증 자료실",
+  description: "공식 문서와 데이터 포렌식을 통한 검증된 팩트체크를 제공하는 미디어 허브입니다.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // phalanx-os URL: 로컬은 :3000, 프로덕션은 환경변수로 주입
-  const osUrl = process.env.NEXT_PUBLIC_OS_URL || 'https://phalanx-os.vercel.app';
+  const cookieStore = await cookies();
+  const tenantCookie = cookieStore.get("pxos_tenant");
+  const tenantId = tenantCookie?.value || process.env.NEXT_PUBLIC_TENANT_ID || "phalanx";
+  const tc = getTenantConfig(tenantId);
+
+  const themeVars = {
+    "--primary": tc.theme.primaryColor,
+    "--accent": tc.theme.accentColor,
+    "--selection": tc.theme.selectionColor,
+  } as React.CSSProperties;
+
+  const osUrl = process.env.NEXT_PUBLIC_OS_URL || "https://phalanx-os.vercel.app";
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "url": "https://phalanx.co",
-    "name": "VQCP Statesman",
-    "description": "국가 문화전략 플랫폼 및 공식 팩트체크 SSoT 허브",
-    "sameAs": ["https://youtube.com/minjoo"],
+    url: "https://phalanx.co",
+    name: tc.displayName,
+    description: `${tc.displayName} SSoT 허브`,
   };
 
+  const terminology = tc.terminology;
+
   return (
-    <html lang="ko" className="scroll-smooth">
-      <body className={`${inter.className} min-h-screen bg-slate-50 text-slate-900 flex flex-col`}>
+    <html lang="ko" className="scroll-smooth" style={themeVars} suppressHydrationWarning>
+      <body className="font-sans min-h-screen bg-[var(--surface-secondary)] text-[var(--text-primary)] flex flex-col antialiased">
+        <ThemeProvider>
         <Suspense fallback={null}>
           <TelemetryProvider />
         </Suspense>
@@ -44,92 +55,182 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
 
-        {/* ── Global Navigation Header ── */}
-        <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md shadow-sm">
-          <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-7xl">
+        {/* ── Global Navigation Header (DS-8: Sticky shrink) ── */}
+        <StickyHeader>
 
             {/* Logo */}
-            <a href="/" className="flex items-center gap-2.5 font-black text-xl tracking-tighter text-blue-900 hover:opacity-80 transition-opacity flex-shrink-0">
-              <span className="w-5 h-5 bg-blue-600 rounded-bl-xl rounded-tr-xl"></span>
-              Statesman
-              <span className="text-blue-400 font-light text-base hidden sm:inline">| 공식 검증 자료실</span>
+            <a
+              href="/"
+              className="flex items-center gap-2.5 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity flex-shrink-0"
+              style={{ color: "var(--primary)" }}
+            >
+              <span
+                className="w-5 h-5 rounded-bl-xl rounded-tr-xl flex-shrink-0"
+                style={{ backgroundColor: "var(--primary)" }}
+              />
+              {tc.displayName.split(" ")[0]}
+              <span className="font-light text-sm hidden sm:inline text-slate-400">
+                {tc.vertical === "sales" ? "공식 카탈로그" : "공식 검증 자료실"}
+              </span>
             </a>
 
-            {/* Center Nav Links */}
-            <nav className="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
-              <a href="/" className="px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
-                최신 의제
-              </a>
-              <a href="/canon" className="px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
-                📋 정책 칼럼
-              </a>
-              <a href="/experts" className="px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
-                🏛️ 전문가 자문단
-              </a>
-              <a href="/agora" className="px-3 py-2 rounded-lg hover:bg-violet-50 hover:text-violet-700 transition-colors font-bold">
-                💬 공론장(아고라)
-              </a>
+            {/* ── Center: 2-Group Desktop Nav ── */}
+            <nav className="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-700 h-full flex-1 justify-center">
+
+              {/* Group 1: 콘텐츠 */}
+              <div className="group h-full flex items-center relative">
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700">
+                  <Newspaper className="w-4 h-4" />
+                  콘텐츠
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform duration-200" />
+                </button>
+                <div className="absolute top-full mt-[-1px] left-0 hidden group-hover:block z-50 pt-2">
+                  <div className="bg-white border border-slate-200 shadow-xl rounded-2xl py-2 min-w-[200px]">
+                    <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">콘텐츠</div>
+                    <a href="/webzine" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                      <Newspaper className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <div className="font-semibold">웹진</div>
+                        <div className="text-xs text-slate-400">최신 기사 · 사설 · 인터뷰</div>
+                      </div>
+                    </a>
+                    <a href="/webzine?category=editorial" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 pl-10 transition-colors">
+                      사설 / 오피니언
+                    </a>
+                    <a href="/webzine?category=interview" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 pl-10 transition-colors">
+                      스페셜 인터뷰
+                    </a>
+                    <a href="/webzine?category=trend" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-700 pl-10 transition-colors">
+                      트렌드 리포트
+                    </a>
+                    <div className="h-px bg-slate-100 my-1" />
+                    <a href="/canon" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                      <BookOpen className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <div className="font-semibold">{terminology.canon} (정답카드)</div>
+                        <div className="text-xs text-slate-400">팩트체크 · 정책 · FAQ</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 2: 커뮤니티 */}
+              <div className="group h-full flex items-center relative">
+                <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700">
+                  <MessageSquare className="w-4 h-4" />
+                  커뮤니티
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform duration-200" />
+                </button>
+                <div className="absolute top-full mt-[-1px] left-0 hidden group-hover:block z-50 pt-2">
+                  <div className="bg-white border border-slate-200 shadow-xl rounded-2xl py-2 min-w-[220px]">
+                    <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-slate-400">커뮤니티</div>
+                    <a href="/experts" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                      <Landmark className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <div className="font-semibold">전문가 네트워크</div>
+                        <div className="text-xs text-slate-400">Authority 전문가 · 자문 요청</div>
+                      </div>
+                    </a>
+                    <a href="/challenges" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                      <Trophy className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <div className="font-semibold">챌린지</div>
+                        <div className="text-xs text-slate-400">포토 · 기고 · 정책 아이디어 공모</div>
+                      </div>
+                    </a>
+                    <a href="/agora" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors" style={{ color: "var(--accent)" }}>
+                      <MessageSquare className="w-4 h-4" />
+                      <div>
+                        <div className="font-semibold">{terminology.agora}</div>
+                        <div className="text-xs text-slate-400 text-slate-400">질문 · 토론 · 시민 의견</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </nav>
 
             {/* Right CTA */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-shrink-0">
               <a
                 href={`${osUrl}/v-dash`}
-                className="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors shadow-md"
+                className="hidden sm:flex items-center gap-2 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors shadow-md"
+                style={{ backgroundColor: "var(--primary)" }}
               >
-                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                시민 참여하기 →
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                참여 공간 →
               </a>
-              <button className="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="메뉴 열기">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
+
+              {/* DS-10: Dark Mode Toggle */}
+              <ThemeToggle />
+
+              {/* Mobile Nav (WP-4) */}
+              <MobileNav osUrl={osUrl} terminology={terminology} />
             </div>
-          </div>
-        </header>
+        </StickyHeader>
 
-        <main className="flex-1 w-full relative">
-          {children}
-        </main>
+        <main className="flex-1 w-full relative">{children}</main>
 
-        {/* ── Global Footer ── */}
+        {/* ── Global Footer (WP-7 synced) ── */}
         <footer className="border-t bg-slate-900 text-slate-400 py-16 mt-20">
           <div className="container mx-auto px-4 max-w-7xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+              {/* Brand */}
+              <div className="md:col-span-1">
                 <div className="flex items-center gap-2 font-black text-white text-lg mb-3">
-                  <span className="w-4 h-4 bg-blue-500 rounded-bl-lg rounded-tr-lg"></span>
-                  VQCP Statesman
+                  <span className="w-4 h-4 rounded-bl-lg rounded-tr-lg" style={{ backgroundColor: "var(--primary)" }} />
+                  {tc.displayName}
                 </div>
                 <p className="text-sm leading-relaxed">
-                  본 사이트의 데이터는 감정을 배제하고 공식 문서와 포렌식 지표만을 근거로 발행됩니다.
+                  본 사이트의 데이터는 감정을 배제하고 공식 문서와 데이터를 근거로 발행됩니다.
                 </p>
               </div>
+
+              {/* 콘텐츠 */}
               <div>
-                <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">탐색</h4>
+                <h4 className="text-white font-bold mb-4 text-xs uppercase tracking-widest">콘텐츠</h4>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="/" className="hover:text-white transition-colors">최신 팩트체크</a></li>
-                  <li><a href="/canon" className="hover:text-white transition-colors">정책 칼럼</a></li>
-                  <li><a href="/experts" className="hover:text-white transition-colors">전문가 자문단</a></li>
+                  <li><a href="/webzine" className="hover:text-white transition-colors">웹진</a></li>
+                  <li><a href="/webzine?category=editorial" className="hover:text-white transition-colors">사설 / 오피니언</a></li>
+                  <li><a href="/webzine?category=trend" className="hover:text-white transition-colors">트렌드 리포트</a></li>
+                  <li><a href="/canon" className="hover:text-white transition-colors">{terminology.canon} (정답카드)</a></li>
                 </ul>
               </div>
+
+              {/* 커뮤니티 */}
               <div>
-                <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">시민 참여</h4>
-                <p className="text-sm mb-4">정책 검증 활동에 함께하고 싶다면, 시민 참여 공간으로 이동하십시오.</p>
+                <h4 className="text-white font-bold mb-4 text-xs uppercase tracking-widest">커뮤니티</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="/experts" className="hover:text-white transition-colors">전문가 네트워크</a></li>
+                  <li><a href="/challenges" className="hover:text-white transition-colors">챌린지</a></li>
+                  <li><a href="/agora" className="hover:text-white transition-colors">{terminology.agora}</a></li>
+                </ul>
+              </div>
+
+              {/* 시민 참여 CTA */}
+              <div>
+                <h4 className="text-white font-bold mb-4 text-xs uppercase tracking-widest">시민 참여</h4>
+                <p className="text-sm mb-4 leading-relaxed">
+                  플랫폼 검증 활동에 함께하고 싶다면, 참여 공간으로 이동하십시오.
+                </p>
                 <a
                   href={`${osUrl}/v-dash`}
-                  className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors"
+                  className="inline-flex items-center gap-2 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors"
+                  style={{ backgroundColor: "var(--primary)" }}
                 >
+                  <ExternalLink className="w-3.5 h-3.5" />
                   참여자 공간 →
                 </a>
               </div>
             </div>
+
             <div className="border-t border-slate-800 pt-6 text-center text-xs">
-              © 2026 VQCP Project. All Rights Reserved.
+              © 2026 {tc.displayName}. All Rights Reserved.
             </div>
           </div>
         </footer>
+        </ThemeProvider>
       </body>
     </html>
   );

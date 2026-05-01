@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { BookOpen, Calendar, ArrowRight, TrendingUp, GitMerge, Badge } from "lucide-react";
+import { BookOpen, Calendar, ArrowRight, TrendingUp, GitMerge } from "lucide-react";
 import type { Metadata } from "next";
+import { getTenantConfig } from "@/lib/tenant-config";
+
+const tc = getTenantConfig();
 
 export const metadata: Metadata = {
-  title: "국가전략 노트 (The Canon) | VQCP Statesman",
-  description: "김민석의 국가 운영 철학과 구체적 정책 대안, 그리고 전위대 집단지성 파생글을 매주 연재합니다.",
+  title: `${tc.media.canonTitle} | ${tc.displayName}`,
+  description: tc.media.canonSubtitle,
 };
 
 export const revalidate = 30;
@@ -49,7 +52,30 @@ const MOCK_CHAPTERS = [
 ];
 
 export default async function CanonListPage() {
-  // Fetch garrison post counts per canon chapter
+  // WP-12: DB-first fetch, fallback to mock
+  const { data: dbFactCards } = await supabase
+    .from("fact_cards")
+    .select("id, canonical_question, answer, category, created_at")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const hasDB = dbFactCards && dbFactCards.length > 0;
+
+  const chapters = hasDB
+    ? dbFactCards.map((fc: any, i: number) => ({
+        id: fc.id,
+        vol: `${tc.terminology.canon} · ${fc.category || "일반"}`,
+        title: fc.canonical_question,
+        excerpt: fc.answer?.slice(0, 200) + "...",
+        date: new Date(fc.created_at).toLocaleDateString("ko-KR"),
+        readTime: "3 min read",
+        isNew: i === 0,
+        followUpCount: 0,
+      }))
+    : MOCK_CHAPTERS;
+
+  // Fetch garrison follow-up counts
   const { data: postCounts } = await supabase
     .from("garrison_posts")
     .select("seed_canon_id")
@@ -60,12 +86,12 @@ export default async function CanonListPage() {
     countMap[p.seed_canon_id] = (countMap[p.seed_canon_id] || 0) + 1;
   });
 
-  const chapters = MOCK_CHAPTERS.map((ch) => ({
+  const chaptersWithCounts = chapters.map((ch: any) => ({
     ...ch,
     followUpCount: countMap[ch.id] ?? ch.followUpCount,
   }));
 
-  const totalFollowUps = Object.values(countMap).reduce((a, b) => a + b, 0) || 3;
+  const totalFollowUps = Object.values(countMap).reduce((a: number, b: number) => a + b, 0) || 3;
 
   return (
     <div className="bg-[#FAF9F6] min-h-screen">
@@ -74,15 +100,13 @@ export default async function CanonListPage() {
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 text-indigo-600 font-bold tracking-widest text-xs uppercase mb-6">
             <BookOpen className="w-4 h-4" />
-            <span>정책 칼럼 연재 노트</span>
+            <span>{tc.terminology.canon}</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6 font-serif">
-            국가전략 노트
+            {tc.media.canonTitle}
           </h1>
           <p className="text-lg text-slate-600 font-light leading-relaxed mb-8">
-            단편적인 해명을 넘어, 국가 운영의 굵직한 철학과 구체적 정책 대안을
-            <br className="hidden md:block" />
-            매주 수요일 저녁, 독자들과 시민 참여자들에게 공개합니다.
+            {tc.media.canonSubtitle}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <span className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium">
@@ -98,7 +122,7 @@ export default async function CanonListPage() {
       {/* Chapters Feed */}
       <main className="max-w-3xl mx-auto px-4 py-16">
         <div className="space-y-16 flex flex-col">
-          {chapters.map((ch, idx) => (
+          {chaptersWithCounts.map((ch: any, idx: number) => (
             <article key={ch.id} className="group relative">
               <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 mb-4 font-mono">
                 <span className="uppercase tracking-widest text-indigo-600 font-semibold">{ch.vol}</span>
@@ -148,7 +172,7 @@ export default async function CanonListPage() {
             총리님의 과거 기고문과 저서들이 순차적으로 디지털 복원되어 인용 가능한 캐논으로 업데이트됩니다.
           </p>
           <Link
-            href="/v-dash/oiticle/write?seed=v1-chapter-1"
+            href="/agora/ask"
             className="inline-block bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-3 rounded-full font-bold text-sm transition"
           >
             ✍️ 시민 기고 작성하기
