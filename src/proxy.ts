@@ -176,26 +176,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 루트 / → 역할별 분기
-  if (url.pathname === '/' || url.pathname === '/feed') {
-    if (userLevel >= roleHierarchy['PRINCIPAL'] && mockRole === 'PRINCIPAL') {
-      return NextResponse.rewrite(new URL('/principal', request.url));
-    }
-    if (userLevel >= roleHierarchy['EXPERT'] && mockRole === 'EXPERT') {
-      return NextResponse.rewrite(new URL('/expert', request.url));
-    }
-    if (userLevel >= roleHierarchy['ACTIVIST'] || vgToken) {
-      return NextResponse.rewrite(new URL('/v-dash', request.url));
-    }
-    if (url.pathname === '/') {
-      const mediaUrl = process.env.NEXT_PUBLIC_MEDIA_URL || 'https://phalanx-media.vercel.app';
-      return NextResponse.redirect(new URL(mediaUrl));
-    }
-  }
+  // 루트 / → Media에서는 그대로 page.tsx 렌더
+  // (이 블록은 phalanx-os 전용이므로 media에서는 passthrough)
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/', '/feed', '/v-dash/:path*', '/admin/:path*', '/principal/:path*', '/expert/:path*', '/commander/:path*', '/media/:path*', '/media'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|api/).*)'],
 };
