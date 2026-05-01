@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // phalanx-os URL: 로컬은 :3000, 프로덕션은 환경변수로 주입
+  const osUrl = process.env.NEXT_PUBLIC_OS_URL || 'https://phalanx-os.vercel.app';
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -72,7 +74,7 @@ export default function RootLayout({
             {/* Right CTA */}
             <div className="flex items-center gap-3">
               <a
-                href="http://localhost:3000/v-dash"
+                href={`${osUrl}/v-dash`}
                 className="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors shadow-md"
               >
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
@@ -116,7 +118,7 @@ export default function RootLayout({
                 <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">시민 참여</h4>
                 <p className="text-sm mb-4">정책 검증 활동에 함께하고 싶다면, 시민 참여 공간으로 이동하십시오.</p>
                 <a
-                  href="http://localhost:3000/v-dash"
+                  href={`${osUrl}/v-dash`}
                   className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors"
                 >
                   참여자 공간 →
