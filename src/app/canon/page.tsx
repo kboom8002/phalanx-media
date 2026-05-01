@@ -74,7 +74,7 @@ export default async function CanonListPage() {
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-2 text-indigo-600 font-bold tracking-widest text-xs uppercase mb-6">
             <BookOpen className="w-4 h-4" />
-            <span>The Statesman&apos;s Log</span>
+            <span>정책 칼럼 연재 노트</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6 font-serif">
             국가전략 노트
@@ -82,14 +82,14 @@ export default async function CanonListPage() {
           <p className="text-lg text-slate-600 font-light leading-relaxed mb-8">
             단편적인 해명을 넘어, 국가 운영의 굵직한 철학과 구체적 정책 대안을
             <br className="hidden md:block" />
-            매주 수요일 저녁, 독자들과 전위대 요원들 앞에 공개합니다.
+            매주 수요일 저녁, 독자들과 시민 참여자들에게 공개합니다.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <span className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-sm font-medium">
               <Calendar className="w-4 h-4" /> 매주 수요일 20:00 연재
             </span>
             <span className="inline-flex items-center gap-2 bg-fuchsia-50 border border-fuchsia-100 text-fuchsia-700 px-4 py-2 rounded-full text-sm font-medium">
-              <GitMerge className="w-4 h-4" /> 전위대 파생글 총 {totalFollowUps}건
+              <GitMerge className="w-4 h-4" /> 시민 기고 총 {totalFollowUps}건
             </span>
           </div>
         </div>
@@ -110,7 +110,7 @@ export default async function CanonListPage() {
                   <>
                     <span>•</span>
                     <span className="inline-flex items-center gap-1 text-fuchsia-600 font-bold">
-                      <GitMerge className="w-3 h-3" /> Oiticle {ch.followUpCount}건
+                      <GitMerge className="w-3 h-3" /> 시민 기고 {ch.followUpCount}건
                     </span>
                   </>
                 )}
@@ -151,7 +151,7 @@ export default async function CanonListPage() {
             href="/v-dash/oiticle/write?seed=v1-chapter-1"
             className="inline-block bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-3 rounded-full font-bold text-sm transition"
           >
-            ⚡ 내 Oiticle 파생글 작성하기
+            ✍️ 시민 기고 작성하기
           </Link>
         </div>
       </main>

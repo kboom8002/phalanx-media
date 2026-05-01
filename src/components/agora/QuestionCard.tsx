@@ -26,7 +26,7 @@ const REPLY_TYPE_LABELS: Record<string, { label: string; color: string }> = {
   canon_synthesis: { label: "AI 종합",  color: "bg-violet-100 text-violet-700" },
   statesman:       { label: "🏛️ 명사",  color: "bg-blue-100 text-blue-700" },
   expert:          { label: "👨‍💼 전문가", color: "bg-emerald-100 text-emerald-700" },
-  vanguard:        { label: "🪖 전위대", color: "bg-amber-100 text-amber-700" },
+  vanguard:        { label: "💬 시민 참여자", color: "bg-amber-100 text-amber-700" },
 };
 
 export function QuestionCard({ question, index = 0 }: QuestionCardProps) {

@@ -50,7 +50,7 @@ export default function RootLayout({
             <a href="/" className="flex items-center gap-2.5 font-black text-xl tracking-tighter text-blue-900 hover:opacity-80 transition-opacity flex-shrink-0">
               <span className="w-5 h-5 bg-blue-600 rounded-bl-xl rounded-tr-xl"></span>
               Statesman
-              <span className="text-blue-400 font-light text-base hidden sm:inline">| SSoT Archive</span>
+              <span className="text-blue-400 font-light text-base hidden sm:inline">| 공식 검증 자료실</span>
             </a>
 
             {/* Center Nav Links */}
@@ -59,13 +59,13 @@ export default function RootLayout({
                 최신 의제
               </a>
               <a href="/canon" className="px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
-                📖 프라임 정전
+                📋 정책 칼럼
               </a>
               <a href="/experts" className="px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-700 transition-colors">
-                👥 전문가 허브
+                🏛️ 전문가 자문단
               </a>
               <a href="/agora" className="px-3 py-2 rounded-lg hover:bg-violet-50 hover:text-violet-700 transition-colors font-bold">
-                ⚔️ 지식 아고라
+                💬 공론장(아고라)
               </a>
             </nav>
 
@@ -76,7 +76,7 @@ export default function RootLayout({
                 className="hidden sm:flex items-center gap-2 bg-slate-900 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors shadow-md"
               >
                 <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                전위대 합류 →
+                시민 참여하기 →
               </a>
               <button className="md:hidden p-2 rounded-lg hover:bg-slate-100" aria-label="메뉴 열기">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,18 +108,18 @@ export default function RootLayout({
                 <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">탐색</h4>
                 <ul className="space-y-2 text-sm">
                   <li><a href="/" className="hover:text-white transition-colors">최신 팩트체크</a></li>
-                  <li><a href="/canon" className="hover:text-white transition-colors">프라임 정전 (Canon)</a></li>
-                  <li><a href="/experts" className="hover:text-white transition-colors">전문가 허브</a></li>
+                  <li><a href="/canon" className="hover:text-white transition-colors">정책 칼럼</a></li>
+                  <li><a href="/experts" className="hover:text-white transition-colors">전문가 자문단</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">전위대 참여</h4>
-                <p className="text-sm mb-4">의제 확산에 함께하고 싶다면, 전위대 작전실에 합류하십시오.</p>
+                <h4 className="text-white font-bold mb-3 text-xs uppercase tracking-widest">시민 참여</h4>
+                <p className="text-sm mb-4">정책 검증 활동에 함께하고 싶다면, 시민 참여 공간으로 이동하십시오.</p>
                 <a
                   href="http://localhost:3000/v-dash"
                   className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold px-4 py-2 rounded-full transition-colors"
                 >
-                  작전실 입장 →
+                  참여자 공간 →
                 </a>
               </div>
             </div>

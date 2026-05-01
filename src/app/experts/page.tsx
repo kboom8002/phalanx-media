@@ -54,17 +54,17 @@ export default function ExpertsRosterPage() {
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-center gap-2 text-slate-500 font-bold tracking-[0.2em] text-xs uppercase mb-8">
             <Landmark className="w-5 h-5" />
-            <span>Verified Experts Network (VEN)</span>
+            <span>공인 전문가 자문 네트워크</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-tight mb-6 font-serif">
-            지성과 경험을 무기화하다.
+            지성과 경험으로 정책을 검증합니다.
           </h1>
           <p className="text-xl md:text-2xl text-slate-600 font-light leading-relaxed mb-10 max-w-3xl mx-auto">
             캠프의 해명은 의심받을 수 있으나, 학계와 현장을 지배하는 <br className="hidden md:block"/>
             최고 전문가 네트워크의 팩트는 여론의 최종 심판 기준이 됩니다.
           </p>
           <div className="inline-flex items-center gap-2 bg-indigo-50/50 border border-indigo-200 text-indigo-800 px-6 py-3 rounded-full text-sm font-bold shadow-sm">
-             <ShieldCheck className="w-5 h-5 text-indigo-600" /> 공식 기고(Guest Canon) 및 정책 보증 네트워크
+             <ShieldCheck className="w-5 h-5 text-indigo-600" /> 외부 전문가 기고 및 정책 자문 네트워크
           </div>
         </div>
       </header>

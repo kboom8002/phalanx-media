@@ -151,13 +151,13 @@ export default async function Home() {
                   <div className="p-6 md:p-8 space-y-6">
                     {/* FRA: Fact Check */}
                     <div className="bg-rose-50 border border-rose-100 rounded-xl p-5 relative">
-                      <div className="absolute -top-3 left-4 bg-rose-600 text-white text-xs font-black tracking-wider px-2 py-1 rounded">FACT CHECK (문제 제기)</div>
+                      <div className="absolute -top-3 left-4 bg-rose-600 text-white text-xs font-black tracking-wider px-2 py-1 rounded">의혹 내용</div>
                       <p className="text-slate-800 leading-relaxed font-medium mt-1">{fra.fact}</p>
                     </div>
 
                     {/* FRA: Rebuttal */}
                     <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 relative">
-                      <div className="absolute -top-3 left-4 bg-slate-700 text-white text-xs font-black tracking-wider px-2 py-1 rounded">REBUTTAL (공식 해명 및 근거)</div>
+                      <div className="absolute -top-3 left-4 bg-slate-700 text-white text-xs font-black tracking-wider px-2 py-1 rounded">공식 해명 및 근거</div>
                       <p className="text-slate-700 leading-relaxed mt-1">{fra.rebuttal}</p>
                       
                       {fact.proof_urls && fact.proof_urls.length > 0 && (
@@ -171,7 +171,7 @@ export default async function Home() {
 
                     {/* FRA: Action */}
                     <div className="bg-blue-50 border border-blue-100 rounded-xl p-5 relative">
-                      <div className="absolute -top-3 left-4 bg-blue-600 text-white text-xs font-black tracking-wider px-2 py-1 rounded">CONCLUSION (결론)</div>
+                      <div className="absolute -top-3 left-4 bg-blue-600 text-white text-xs font-black tracking-wider px-2 py-1 rounded">검증 결론</div>
                       <p className="text-blue-900 leading-relaxed font-medium mt-1">{fra.action}</p>
                     </div>
                   </div>
@@ -191,14 +191,14 @@ export default async function Home() {
             <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 p-6">
               <h3 className="text-lg font-black text-slate-800 flex items-center gap-2 mb-2">
                 <Database className="text-fuchsia-600 w-5 h-5" />
-                Data Lab: 실시간 여론 방어 지표
+                AI 분석 현황판: 실시간 정보 신뢰도 지표
               </h3>
-              <p className="text-xs text-slate-500 mb-6">VQCP AI가 분석한 현재의 위협 레이더 지표를 투명하게 공개합니다.</p>
+              <p className="text-xs text-slate-500 mb-6">VQCP AI가 분석한 현재의 정보 신뢰도 지표를 투명하게 공개합니다.</p>
               
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm font-bold mb-1">
-                    <span className="text-slate-700">당정분리 허위 프레임 차단율</span>
+                    <span className="text-slate-700">당정분리 관련 허위정보 감지율</span>
                     <span className="text-emerald-600">87%</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2">
@@ -208,7 +208,7 @@ export default async function Home() {
                 
                 <div>
                   <div className="flex justify-between text-sm font-bold mb-1">
-                    <span className="text-slate-700">다크소셜 초기 위협 탐지</span>
+                    <span className="text-slate-700">비공개 채널 허위정보 감지</span>
                     <span className="text-rose-600">위험</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2">
@@ -217,7 +217,7 @@ export default async function Home() {
                 </div>
 
                 <div className="bg-slate-50 p-4 rounded-xl border mt-6">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Active AI Models</div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">운영 중인 AI 분석 모델</div>
                   <div className="font-mono text-sm text-slate-700 flex flex-col gap-1">
                     <span>• GPT-4o (Sentiment Analyzer)</span>
                     <span>• PGVector (Semantic Cluster)</span>

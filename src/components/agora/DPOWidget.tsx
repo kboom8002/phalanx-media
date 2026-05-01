@@ -23,7 +23,7 @@ const TYPE_LABEL: Record<string, string> = {
   canon_synthesis: "🤖 AI 종합",
   statesman:       "🏛️ 명사",
   expert:          "👨‍💼 전문가",
-  vanguard:        "🪖 전위대",
+  vanguard:        "💬 시민 참여자",
 };
 
 export function DPOWidget({ questionId, replies, isLoggedIn, onLoginRequired }: DPOWidgetProps) {
@@ -72,7 +72,7 @@ export function DPOWidget({ questionId, replies, isLoggedIn, onLoginRequired }: 
       <div className="flex items-center gap-2 mb-4">
         <Scale className="w-5 h-5 text-violet-600" />
         <h3 className="font-bold text-violet-900 text-sm">어느 답변이 더 설득력 있습니까?</h3>
-        <span className="ml-auto text-xs text-violet-400 font-mono">{votes}회 참여</span>
+        <span className="ml-auto text-xs text-violet-400 font-mono">{votes}건 평가 참여</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -108,7 +108,7 @@ export function DPOWidget({ questionId, replies, isLoggedIn, onLoginRequired }: 
                   animate={{ opacity: 1 }}
                   className="mt-2 text-violet-700 font-bold text-xs"
                 >
-                  ✓ 선택됨 — ELO 반영 완료
+                  ✓ 선택됨 — 의견 반영 완료
                 </motion.p>
               )}
             </motion.button>
@@ -127,7 +127,7 @@ export function DPOWidget({ questionId, replies, isLoggedIn, onLoginRequired }: 
               onClick={nextPair}
               className="flex items-center gap-1.5 text-sm font-semibold text-violet-600 hover:text-violet-800 transition-colors"
             >
-              다음 비교 <ChevronRight className="w-4 h-4" />
+              다음 의견 비교 <ChevronRight className="w-4 h-4" />
             </button>
           </motion.div>
         )}
