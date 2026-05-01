@@ -51,7 +51,7 @@ export default function ExpertProfilePage({ params }: { params: { expertId: stri
           <div>
             <div className="flex items-center gap-2 mb-2">
               <h1 className="text-4xl font-serif font-black text-slate-900 tracking-tight">{expert.name}</h1>
-              {expert.verified && <CheckCircle2 className="w-6 h-6 text-emerald-500" title="공식 승인된 지지 명사" />}
+              {expert.verified && <CheckCircle2 className="w-6 h-6 text-emerald-500" aria-label="공인 전문가" />}
             </div>
             <h2 className="text-xl font-bold text-slate-700 mb-1">{expert.title}</h2>
             <div className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-6">{expert.institution}</div>
@@ -87,7 +87,7 @@ export default function ExpertProfilePage({ params }: { params: { expertId: stri
                     <FileText className="w-4 h-4" /> 문서 전문 열람
                   </button>
                   <button className="bg-indigo-50 border border-indigo-100 hover:bg-indigo-100 text-indigo-700 px-6 py-2.5 rounded-full text-sm font-bold transition flex items-center gap-2">
-                    <Share2 className="w-4 h-4" /> 다크 소셜 폭격 좌표 복사
+                    <Share2 className="w-4 h-4" /> 공유하기
                   </button>
                 </div>
               </article>
