@@ -39,15 +39,9 @@ function parseFRA(answer: string) {
 
 export default async function Home() {
   const tc = getTenantConfig();
-  // Fetch SSoT Fact Cards
-  const { data: factCards, error } = await supabase
-    .from('fact_cards')
-    .select('id, canonical_question, answer, proof_urls, created_at')
-    .eq('is_published', true)
-    .order('created_at', { ascending: false })
-    .limit(10);
 
-  const facts = factCards || [
+  // Demo fallback data — used when Supabase is unreachable or env vars are placeholder
+  const DEMO_FACTS = [
     {
       id: "demo-1",
       canonical_question: "[긴급 전파] 타 진영에서 퍼뜨린 '전당대회 룰 편파' 조작 프레임에 대한 진실",
@@ -55,6 +49,22 @@ export default async function Home() {
       proof_urls: ["https://theminjoo.kr"]
     }
   ];
+
+  // Fetch SSoT Fact Cards with graceful fallback
+  let facts = DEMO_FACTS;
+  try {
+    const { data: factCards } = await supabase
+      .from('fact_cards')
+      .select('id, canonical_question, answer, proof_urls, created_at')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (factCards && factCards.length > 0) {
+      facts = factCards;
+    }
+  } catch {
+    // Supabase unavailable — use demo data silently
+  }
 
   // 2. Generate AEO-First JSON-LD Schema (FAQPage / ClaimReview Dual Strategy)
   const faqSchema = {
