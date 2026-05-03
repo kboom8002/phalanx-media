@@ -76,6 +76,14 @@ export default async function RootLayout({
             {/* ── Center: Desktop Nav (vertical-polymorphic) ── */}
             {tc.vertical === 'wedding' ? (
               <WeddingNav osUrl={osUrl} />
+            ) : tc.vertical === 'clinic_derma' ? (
+              <nav className="hidden md:flex items-center gap-1 text-sm font-semibold h-full flex-1 justify-center" style={{ color: tc.theme.primaryColor }}>
+                <a href={`/${tenantId}`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">홈</a>
+                <a href={`/${tenantId}/moments`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">이럴 때 DR.O</a>
+                <a href={`/${tenantId}/compare`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">제품 비교</a>
+                <a href={`/${tenantId}/routines`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">루틴 가이드</a>
+                <a href={`/${tenantId}/products`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">제품</a>
+              </nav>
             ) : (
             <nav className="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-700 h-full flex-1 justify-center">
 
