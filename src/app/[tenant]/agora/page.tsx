@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { QuestionCard } from "@/components/agora/QuestionCard";
-import { Sword, Search, PenLine } from "lucide-react";
+import { Sword, Search, PenLine, Heart } from "lucide-react";
 import Link from "next/link";
+import { getTenantConfig } from "@/lib/tenant-config";
 
 export const revalidate = 60; // 1분 ISR
 
@@ -16,9 +17,12 @@ export const metadata: Metadata = {
   },
 };
 
-const ISSUE_TAGS = ["전체", "경제", "외교", "안보", "복지", "선거", "당정", "총리", "대표"];
+const ISSUE_TAGS_BY_VERTICAL: Record<string, string[]> = {
+  politics: ["전체", "경제", "외교", "안보", "복지", "선거", "당정", "총리", "대표"],
+  wedding:  ["전체", "스튜디오", "드레스", "메이크업", "스냅", "예산", "일정", "해외웨딩", "허니문"],
+};
 
-async function getQuestions(tag?: string, sort = "created_at") {
+async function getQuestions(tenantId: string, tag?: string, sort = "created_at") {
   const sb = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -28,6 +32,7 @@ async function getQuestions(tag?: string, sort = "created_at") {
     .from("agora_questions")
     .select("id, slug, title, body, ai_synthesis, issue_tags, reply_count, total_upvotes, quality_score, created_at")
     .eq("status", "open")
+    .eq("tenant_id", tenantId)
     .order(
       sort === "popular" ? "total_upvotes" : sort === "replies" ? "reply_count" : "created_at",
       { ascending: false }
@@ -42,11 +47,18 @@ async function getQuestions(tag?: string, sort = "created_at") {
 
 export default async function AgoraPage({
   searchParams,
+  params,
 }: {
   searchParams: Promise<{ tag?: string; sort?: string }>;
+  params: Promise<{ tenant: string }>;
 }) {
   const { tag, sort = "created_at" } = await searchParams;
-  const questions = await getQuestions(tag, sort);
+  const p = await params;
+  const tenantId = p.tenant || "phalanx";
+  const tc = getTenantConfig(tenantId);
+  const isWedding = tc.vertical === 'wedding';
+  const ISSUE_TAGS = ISSUE_TAGS_BY_VERTICAL[tc.vertical] || ISSUE_TAGS_BY_VERTICAL.politics;
+  const questions = await getQuestions(tenantId, tag, sort);
 
   // JSON-LD: FAQPage (상위 10개)
   const faqSchema = {
@@ -73,14 +85,15 @@ export default async function AgoraPage({
         {/* 헤더 */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center">
-              <Sword className="w-5 h-5 text-white" />
+            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${isWedding ? 'from-rose-500 to-pink-600' : 'from-blue-600 to-violet-600'} flex items-center justify-center`}>
+              {isWedding ? <Heart className="w-5 h-5 text-white" /> : <Sword className="w-5 h-5 text-white" />}
             </div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight">지식 아고라</h1>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight">{tc.terminology.agora}</h1>
           </div>
           <p className="text-slate-500 text-base max-w-xl">
-            AI와 전문가, 시민이 함께 정치 쟁점을 탐구합니다.
-            답변에 참여하여 더 나은 공론장을 만들어주세요.
+            {isWedding
+              ? '예비부부와 전문가가 함께 웨딩 궁금증을 나누는 커뮤니티입니다. 질문하고 답변에 참여해 보세요.'
+              : 'AI와 전문가, 시민이 함께 정치 쟁점을 탐구합니다. 답변에 참여하여 더 나은 공론장을 만들어주세요.'}
           </p>
         </div>
 
@@ -95,7 +108,7 @@ export default async function AgoraPage({
                   return (
                     <Link
                       key={t}
-                      href={t === "전체" ? "/agora" : `/agora?tag=${t}`}
+                      href={t === "전체" ? `/${tenantId}/agora` : `/${tenantId}/agora?tag=${t}`}
                       className={`block px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
                         active
                           ? "bg-blue-600 text-white"
@@ -111,7 +124,7 @@ export default async function AgoraPage({
               <hr className="my-4 border-slate-100" />
 
               <Link
-                href="/agora/ask"
+                href={`/${tenantId}/agora/ask`}
                 className="flex items-center gap-2 w-full px-3 py-2.5 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white rounded-xl text-sm font-bold transition-all shadow-sm"
               >
                 <PenLine className="w-4 h-4" />
@@ -135,7 +148,7 @@ export default async function AgoraPage({
                 ].map((s) => (
                   <Link
                     key={s.value}
-                    href={`/agora?${tag ? `tag=${tag}&` : ""}sort=${s.value}`}
+                    href={`/${tenantId}/agora?${tag ? `tag=${tag}&` : ""}sort=${s.value}`}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       sort === s.value
                         ? "bg-slate-900 text-white"
@@ -154,7 +167,7 @@ export default async function AgoraPage({
                 <p className="font-semibold">아직 쟁점이 없습니다</p>
                 <p className="text-sm mt-1">첫 번째 쟁점 질문을 올려보세요</p>
                 <Link
-                  href="/agora/ask"
+                  href={`/${tenantId}/agora/ask`}
                   className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold"
                 >
                   <PenLine className="w-4 h-4" /> 질문하기

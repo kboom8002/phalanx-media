@@ -1,10 +1,16 @@
 import Link from "next/link";
-import { Trophy, Image, FileText, Lightbulb, MapPin, Users, Calendar, ArrowRight, Clock } from "lucide-react";
+import { Trophy, Image, FileText, Lightbulb, MapPin, Users, Calendar, ArrowRight, Clock, Star } from "lucide-react";
+import { getTenantConfig } from "@/lib/tenant-config";
 
-export const metadata = {
-  title: "참여 챌린지 | Phalanx Media",
-  description: "시민이 직접 참여하는 정책 포토, 기고, 아이디어 공모전. 여러분의 목소리로 변화를 만들어보세요.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ tenant: string }> }) {
+  const p = await params;
+  const tenantId = p.tenant || "phalanx";
+  const tc = getTenantConfig(tenantId);
+  return {
+    title: `참여 챌린지 | ${tc.displayName}`,
+    description: tc.vertical === 'wedding' ? "웨딩 앰배서더 챌린지에 참여하고 포인트를 적립하세요." : "시민이 직접 참여하는 정책 포토, 기고, 아이디어 공모전.",
+  };
+}
 
 const TYPE_META: Record<string, { icon: any; color: string; bgColor: string }> = {
   photo: { icon: Image, color: 'text-pink-600', bgColor: 'bg-pink-50' },
@@ -18,7 +24,7 @@ const TYPE_META: Record<string, { icon: any; color: string; bgColor: string }> =
   idea: { icon: Lightbulb, color: 'text-orange-600', bgColor: 'bg-orange-50' },
 };
 
-const CHALLENGES = [
+const POLITICS_CHALLENGES = [
   {
     id: 'ch-1', slug: 'policy-photo-2026',
     title: '우리 동네 정책 현장 포토 공모전',
@@ -45,7 +51,40 @@ const CHALLENGES = [
   },
 ];
 
-export default function ChallengesPublicPage() {
+const WEDDING_CHALLENGES = [
+  {
+    id: 'ch-w1', slug: 'wedding-photo-2026',
+    title: '5월 웨딩 스냅 인생샷 챌린지',
+    type: 'photo', status: 'open',
+    description: '가장 아름다웠던 스튜디오/본식 스냅 사진을 자랑해주세요! 우수작은 공식 인스타그램에 소개됩니다.',
+    deadline: '2026-05-31', submissions: 142,
+    reward: '포인트 +500 · 앰배서더 추천 · 챕터 기여도 +1',
+  },
+  {
+    id: 'ch-w2', slug: 'honest-review-2026',
+    title: '스드메 찐 후기 공모전',
+    type: 'testimonial', status: 'open',
+    description: '결혼 준비하며 겪은 시행착오나 꿀팁, 그리고 추천하고 싶은 업체의 솔직한 후기를 남겨주세요.',
+    deadline: '2026-06-15', submissions: 56,
+    reward: '포인트 +1,000 · 메인 페이지 리뷰 등재',
+  },
+  {
+    id: 'ch-w3', slug: 'wedding-idea-2026',
+    title: '나만의 셀프 웨딩 기획안',
+    type: 'idea', status: 'judging',
+    description: '남들과 다른 특별한 웨딩을 기획하셨나요? 나만의 특별한 예식 식순과 아이디어를 공유해주세요.',
+    deadline: '2026-04-30', submissions: 34,
+    reward: '포인트 +2,000 · 매거진 에디터 초빙',
+  },
+];
+
+export default async function ChallengesPublicPage({ params }: { params: Promise<{ tenant: string }> }) {
+  const p = await params;
+  const tenantId = p.tenant || "phalanx";
+  const tc = getTenantConfig(tenantId);
+  const isWedding = tc.vertical === 'wedding';
+  
+  const CHALLENGES = isWedding ? WEDDING_CHALLENGES : POLITICS_CHALLENGES;
   const openChallenges = CHALLENGES.filter(c => c.status === 'open');
   const pastChallenges = CHALLENGES.filter(c => c.status !== 'open');
 
@@ -61,8 +100,9 @@ export default function ChallengesPublicPage() {
             당신의 참여가 변화를 만듭니다.
           </h1>
           <p className="text-lg text-slate-600 font-light leading-relaxed max-w-2xl mx-auto">
-            포토, 기고, 정책 아이디어 등 다양한 방식으로 참여하세요.<br />
-            채택된 콘텐츠는 <strong>정답카드(SSoT)</strong>로 승격되어 여러분의 <strong>Authority Score</strong>에 반영됩니다.
+            {isWedding 
+              ? <>포토, 리뷰, 꿀팁 등 다양한 방식으로 참여하세요.<br />채택된 콘텐츠는 <strong>공식 추천 가이드</strong>로 승격되어 여러분의 <strong>포인트와 앰배서더 등급</strong>에 반영됩니다.</>
+              : <>포토, 기고, 정책 아이디어 등 다양한 방식으로 참여하세요.<br />채택된 콘텐츠는 <strong>정답카드(SSoT)</strong>로 승격되어 여러분의 <strong>Authority Score</strong>에 반영됩니다.</>}
           </p>
         </div>
       </header>
@@ -83,7 +123,12 @@ export default function ChallengesPublicPage() {
                   <div className={`${meta.bgColor} px-5 py-3 flex items-center justify-between border-b border-slate-100`}>
                     <div className={`flex items-center gap-2 ${meta.color} font-bold text-sm`}>
                       <TypeIcon className="w-4 h-4" />
-                      {ch.type === 'photo' ? '포토 챌린지' : ch.type === 'article' ? '기고 공모' : ch.type === 'policy' ? '정책 기획 공모' : '참여 챌린지'}
+                      {ch.type === 'photo' ? (isWedding ? '포토 챌린지' : '포토 챌린지') 
+                        : ch.type === 'article' ? '기고 공모' 
+                        : ch.type === 'policy' ? '정책 기획 공모'
+                        : ch.type === 'testimonial' ? '솔직 후기'
+                        : ch.type === 'idea' ? '아이디어 공모'
+                        : '참여 챌린지'}
                     </div>
                     <span className="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">모집 중</span>
                   </div>

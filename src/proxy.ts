@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
 
   // ─── 0-A. 런타임 테넌트 해석 ───────────────────────────────
   // 우선순위: (1) ?tenant= 쿼리 (2) 서브도메인 (3) 쿠키 (4) 환경변수
-  const KNOWN_TENANTS = ['phalanx', 'aihompy', 'kskincare', 'tfstudio', 'jejuto'];
+  const KNOWN_TENANTS = ['phalanx', 'aihompy', 'kskincare', 'tfstudio', 'jejuto', 'kwedding'];
 
   let resolvedTenant: string | null = null;
 
@@ -46,12 +46,33 @@ export async function proxy(request: NextRequest) {
   // (4) 환경변수 기본값
   const tenantId = resolvedTenant || process.env.NEXT_PUBLIC_TENANT_ID || 'phalanx';
 
-  // 테넌트가 변경되었으면 쿠키 갱신 + (쿼리였으면 리다이렉트)
-  const currentCookie = request.cookies.get('pxos_tenant')?.value;
+  // 테넌트가 변경되었으면 쿠키 갱신 (리다이렉트는 아래에서 통합 처리)
   if (tenantQuery && resolvedTenant) {
-    response = NextResponse.redirect(url);
     response.cookies.set('pxos_tenant', tenantId, { path: '/', maxAge: 60 * 60 * 24 * 365 });
-    return response;
+  }
+
+  // Path-based 라우팅 리다이렉트 처리
+  const isStaticFile = url.pathname.startsWith('/_next') || url.pathname.startsWith('/api') || url.pathname.includes('.');
+  if (!isStaticFile) {
+    const pathParts = url.pathname.split('/');
+    const firstSegment = pathParts[1];
+    
+    if (!KNOWN_TENANTS.includes(firstSegment)) {
+      // 테넌트 슬러그가 없는 레거시 접근 -> /tenantId/경로 로 리다이렉트
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = `/${tenantId}${url.pathname === '/' ? '' : url.pathname}`;
+      redirectUrl.searchParams.delete('tenant');
+      const res = NextResponse.redirect(redirectUrl);
+      if (tenantQuery) res.cookies.set('pxos_tenant', tenantId, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+      return res;
+    } else if (tenantQuery) {
+      // 슬러그는 있는데 ?tenant= 쿼리가 남은 경우 쿼리 제거
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.searchParams.delete('tenant');
+      const res = NextResponse.redirect(redirectUrl);
+      res.cookies.set('pxos_tenant', tenantId, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+      return res;
+    }
   }
 
   // ─── 0-B. Rate Limiting (Vercel KV) ────────────────────────
@@ -72,8 +93,20 @@ export async function proxy(request: NextRequest) {
   }
 
   // 테넌트 쿠키가 아직 없으면 응답에 세팅
+  const currentCookie = request.cookies.get('pxos_tenant')?.value;
   if (currentCookie !== tenantId) {
     response.cookies.set('pxos_tenant', tenantId, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+  }
+
+  // ─── 0-C. Ambassador Referral Tracking ─────────────────────
+  // ?ref=AMB-xxxx → 쿠키에 저장하여 Lead 생성 시 ambassador_id로 연결
+  const refParam = url.searchParams.get('ref');
+  if (refParam && refParam.startsWith('AMB-')) {
+    url.searchParams.delete('ref');
+    const refResponse = NextResponse.redirect(url);
+    refResponse.cookies.set('kwedding_ref', refParam, { path: '/', maxAge: 60 * 60 * 24 * 30 });
+    refResponse.cookies.set('pxos_tenant', tenantId, { path: '/', maxAge: 60 * 60 * 24 * 365 });
+    return refResponse;
   }
 
   const vgToken = request.cookies.get('vg_token')?.value;

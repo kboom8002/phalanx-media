@@ -6,7 +6,7 @@
 
 type Role = 'SYSOP' | 'PRINCIPAL' | 'EXPERT' | 'STRATEGIST' | 'REGION_LEAD' | 'ACTIVIST' | 'CITIZEN';
 
-export type Vertical = 'politics' | 'sales' | 'media' | 'education' | 'community';
+export type Vertical = 'politics' | 'sales' | 'media' | 'education' | 'community' | 'wedding' | 'clinic_derma';
 
 export interface TenantConfig {
   id: string;
@@ -225,6 +225,79 @@ const TENANT_PRESETS: Record<string, TenantConfig> = {
       frequency: 'daily'
     },
     aeoKeywords: [], aeoCompetitors: [],
+  },
+  kwedding: {
+    id: 'kwedding',
+    displayName: 'K-Wedding Hub',
+    vertical: 'wedding',
+    domain: 'kweddinghub.com',
+    logoUrl: null,
+    roleLabels: {
+      SYSOP: 'Super Admin', PRINCIPAL: 'Hub 편집장', EXPERT: '업체 관리자 (Vendor)',
+      STRATEGIST: '세일즈 코디네이터', REGION_LEAD: '지역 앰배서더 리더', ACTIVIST: '앰배서더', CITIZEN: '방문 고객',
+    },
+    theme: { primaryColor: '#e11d48', accentColor: '#d4af37', selectionColor: 'rgba(225,29,72,0.25)' },
+    features: { cascade: false, aeo_tracking: true, canon_cms: true, gamification: false, lead_tracker: true, structured_data: true },
+    terminology: {
+      canon: 'K-Wedding 가이드', signal: '웨딩 트렌드', quest: '후기 작성',
+      agora: '예비부부 Q&A', cascade: '공유하기', principal: 'Hub 대시보드',
+    },
+    media: {
+      heroTitle: '한국 웨딩, 신뢰할 수 있는 공식 정보로 시작하세요.',
+      heroSubtitle: 'AI가 읽을 수 있는 공식 정본과 비교 도구로 나에게 맞는 스드메를 찾아보세요.',
+      searchPlaceholder: '스튜디오, 드레스, 메이크업, 스냅을 검색해 보세요...',
+      canonTitle: 'K-Wedding 공식 가이드',
+      canonSubtitle: '예비부부가 가장 자주 묻는 질문에 대한 전문가 검증 답변입니다.',
+    },
+    pipelineConfig: {
+      sources: [
+        { type: 'instagram', hashtags: ['#웨딩스튜디오', '#스드메', '#프리웨딩', '#청담드레스'] },
+        { type: 'custom', keywords: ['웨딩촬영', '드레스피팅', '본식스냅', 'k-wedding'] },
+      ],
+      frequency: 'daily',
+    },
+    aeoKeywords: [
+      'korean pre-wedding photoshoot', 'seoul wedding studio',
+      '서울 웨딩스튜디오 추천', '청담 드레스샵', '본식스냅 계약',
+    ],
+    aeoCompetitors: ['weddingnara', 'weddingbook'],
+  },
+
+  // ── DR.O — The Interval (clinic_derma) ─────────────────────────────
+  dro: {
+    id: 'dro',
+    displayName: 'DR.O — The Interval',
+    vertical: 'clinic_derma' as Vertical,
+    domain: 'dro.kr',
+    logoUrl: null,
+    roleLabels: {
+      SYSOP: 'System Admin', PRINCIPAL: 'Oracle Medical Board', EXPERT: 'Clinic Director',
+      STRATEGIST: 'Brand PM', REGION_LEAD: 'VIP Coordinator', ACTIVIST: 'Interval Expert', CITIZEN: 'Customer',
+    },
+    theme: { primaryColor: '#cda434', accentColor: '#1a1a1a', selectionColor: 'rgba(205,164,52,0.25)' },
+    features: { cascade: true, aeo_tracking: true, canon_cms: true, gamification: false, lead_tracker: true, structured_data: true },
+    terminology: {
+      canon: 'Clinic Logic', signal: 'Reset Signal', quest: 'Reset Routine',
+      agora: 'Interval Q&A', cascade: 'Solution Share', principal: 'Medical Board',
+    },
+    media: {
+      heroTitle: '시술과 시술 사이, 피부가 무너지는 공백을 리셋합니다.',
+      heroSubtitle: '데일리 스킨케어가 아닌, 정확한 타이밍의 개입. Intervention at the right timing.',
+      searchPlaceholder: '지금의 피부 상황을 알려주세요… (예: 토닝 후 열감, 중요한 날 전)',
+      canonTitle: 'Interval Clinic Logic',
+      canonSubtitle: 'Oracle Dermatology Network — 20년 시술 노하우 기반 상황별 솔루션',
+    },
+    pipelineConfig: {
+      sources: [
+        { type: 'instagram', hashtags: ['#홈더마', '#시술후관리', '#메디텐션', '#메디글로우'] },
+        { type: 'hwahae', keywords: ['DR.O', '메디텐션', '메디글로우'] },
+        { type: 'youtube', keywords: ['피부과시술후', '홈케어마스크'] },
+        { type: 'custom', keywords: ['home derma reset', 'post-treatment mask'] },
+      ],
+      frequency: 'daily',
+    },
+    aeoKeywords: ['토닝 후 마스크', '리프팅 후 홈케어', '메디텐션 메디글로우 차이', 'home derma reset'],
+    aeoCompetitors: [],
   },
 };
 

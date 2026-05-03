@@ -20,7 +20,9 @@ const EXPERTS = [
   { slug: 'minjoo-kim', name: '김민주', title: '제품 성분 분석 전문가', institution: 'K-Beauty Lab', category: '성분 분석 · K-뷰티', score: 68, contributions: 5 },
 ];
 
-export default function ExpertsRosterPage() {
+export default async function ExpertsRosterPage({ params }: { params: Promise<{ tenant: string }> }) {
+  const p = await params;
+  const tenantId = p.tenant || process.env.NEXT_PUBLIC_TENANT_ID || "phalanx";
   return (
     <div className="bg-[#FAF9F6] min-h-screen">
       
@@ -59,7 +61,7 @@ export default function ExpertsRosterPage() {
             .map((expert) => {
               const tier = getAuthorityTier(expert.score);
               return (
-                <Link key={expert.slug} href={`/experts/${expert.slug}`} className="group block">
+                <Link key={expert.slug} href={`/${tenantId}/experts/${expert.slug}`} className="group block">
                   <div className="bg-white border border-slate-200 rounded-lg p-6 h-full shadow-sm hover:shadow-xl hover:border-indigo-200 transition-all duration-300">
                     {/* Avatar */}
                     <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 mx-auto mb-4 shadow-inner ring-4 ring-slate-50 group-hover:ring-indigo-50 transition-all flex items-center justify-center text-white text-2xl font-black">

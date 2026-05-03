@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { Newspaper, Clock, ArrowRight, ChevronRight, Flame, BookOpen, MessageSquare, TrendingUp } from "lucide-react";
 import type { Metadata } from "next";
 import { getTenantConfig } from "@/lib/tenant-config";
+import { cookies } from "next/headers";
 
 export const revalidate = 10;
 
@@ -11,8 +12,10 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"
 );
 
-export async function generateMetadata(): Promise<Metadata> {
-  const tc = getTenantConfig();
+export async function generateMetadata({ params }: { params: Promise<{ tenant: string }> }): Promise<Metadata> {
+  const p = await params;
+  const tenantId = p.tenant || process.env.NEXT_PUBLIC_TENANT_ID || "phalanx";
+  const tc = getTenantConfig(tenantId);
   return {
     title: `웹진 | ${tc.displayName}`,
     description: `${tc.displayName}의 최신 ${tc.terminology.signal}, 사설, 인터뷰, 트렌드 리포트를 확인하세요.`,
@@ -92,11 +95,15 @@ const MOCK_ARTICLES = [
 
 export default async function WebzinePage({
   searchParams,
+  params,
 }: {
   searchParams: Promise<{ category?: string }>;
+  params: Promise<{ tenant: string }>;
 }) {
   const sp = await searchParams;
-  const tc = getTenantConfig();
+  const p = await params;
+  const tenantId = p.tenant || process.env.NEXT_PUBLIC_TENANT_ID || "phalanx";
+  const tc = getTenantConfig(tenantId);
   const activeCategory = sp.category || "latest";
 
   // Try DB first, fallback to mock
@@ -104,6 +111,7 @@ export default async function WebzinePage({
     .from("fact_cards")
     .select("id, canonical_question, answer, category, created_at")
     .eq("is_published", true)
+    .eq("tenant_id", tenantId)
     .order("created_at", { ascending: false })
     .limit(20);
 
@@ -153,7 +161,7 @@ export default async function WebzinePage({
               return (
                 <Link
                   key={cat.key}
-                  href={`/webzine?category=${cat.key}`}
+                  href={`/${tenantId}/webzine?category=${cat.key}`}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all border ${
                     isActive
                       ? "bg-slate-900 text-white border-slate-900"
@@ -175,7 +183,7 @@ export default async function WebzinePage({
             {/* Featured Article */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
               <Link
-                href={`/webzine/${featured.id}`}
+                href={`/${tenantId}/webzine/${featured.id}`}
                 className="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-8 hover:shadow-lg transition-shadow group"
               >
                 <div className="flex items-center gap-2 mb-4">
@@ -203,7 +211,7 @@ export default async function WebzinePage({
                 {secondary.map((art) => (
                   <Link
                     key={art.id}
-                    href={`/webzine/${art.id}`}
+                    href={`/${tenantId}/webzine/${art.id}`}
                     className="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow group flex flex-col gap-2"
                   >
                     <span className="text-[10px] text-slate-400 uppercase tracking-wider">
@@ -247,7 +255,7 @@ export default async function WebzinePage({
             {filteredArticles.map((art) => (
               <Link
                 key={art.id}
-                href={`/webzine/${art.id}`}
+                href={`/${tenantId}/webzine/${art.id}`}
                 className="flex items-center gap-5 p-5 bg-white border border-slate-200 rounded-xl hover:shadow-md hover:border-slate-300 transition-all group"
               >
                 <div className="flex-1 min-w-0">
