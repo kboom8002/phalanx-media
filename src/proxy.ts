@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
 
   // ─── 0-A. 런타임 테넌트 해석 ───────────────────────────────
   // 우선순위: (1) ?tenant= 쿼리 (2) 서브도메인 (3) 쿠키 (4) 환경변수
-  const KNOWN_TENANTS = ['phalanx', 'aihompy', 'kskincare', 'tfstudio', 'jejuto', 'kwedding'];
+  const KNOWN_TENANTS = ['phalanx', 'aihompy', 'kskincare', 'tfstudio', 'jejuto', 'kwedding', 'dro'];
 
   let resolvedTenant: string | null = null;
 
