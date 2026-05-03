@@ -153,9 +153,11 @@ export default async function RootLayout({
                       <MessageSquare className="w-4 h-4" />
                       <div>
                         <div className="font-semibold">{terminology.agora}</div>
-                        <div className="text-xs text-slate-400 text-slate-400">질문 · 토론 · 시민 의견</div>
+                        <div className="text-xs text-slate-400">질문 · 토론 · 시민 의견</div>
                       </div>
                     </a>
+                  </div>
+                </div>
               </div>
 
               {/* CMS (Added for Media Enhancement) */}
