@@ -7,7 +7,7 @@ import { MobileNav } from "@/components/MobileNav";
 import {
   Newspaper, BookOpen, Landmark, Trophy, MessageSquare,
   ChevronDown, ExternalLink, FileText, Search,
-  Brain, Zap, Shield, Layers, GitMerge, Sparkles
+  Brain, Zap, Shield, Layers, GitMerge
 } from "lucide-react";
 import { StickyHeader } from "@/components/StickyHeader";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -185,11 +185,6 @@ export default async function RootLayout({
             </div>
           </div>
 
-          {/* 데스크 */}
-          <a href={`/${tenantId}/cms`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold transition-colors" style={{ color: '#818cf8' }}>
-            <Sparkles className="w-4 h-4" />
-            콘텐츠 데스크
-          </a>
         </nav>
       );
     }
