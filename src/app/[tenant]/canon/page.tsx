@@ -21,36 +21,72 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder"
 );
 
-const MOCK_CHAPTERS = [
+const MOCK_CHAPTERS_POLITICS = [
   {
     id: "v1-chapter-1",
     vol: "Vol. 1 국가의 뼈대",
     title: "왜 다시 당정분리인가: 권력의 분산과 책임의 집중",
     excerpt: "대통령과 여당이 혼연일체가 되어야 국정이 안정된다는 것은 환상이다. 권력이 한 곳으로 집중될수록 작은 충격에도 국가 전체가 흔들리는 구조적 취약성을 갖게 된다...",
-    date: "2026. 04. 15",
-    readTime: "7 min read",
-    isNew: true,
-    followUpCount: 3,
+    date: "2026. 04. 15", readTime: "7 min read", isNew: true, followUpCount: 3,
   },
   {
     id: "v1-chapter-2",
     vol: "Vol. 1 국가의 뼈대",
     title: "K-컬처 시대의 문화 관료주의 타파",
-    excerpt: "문화는 통제의 대상이 아니라 지원의 대상이라는 명제는 20년 전의 낡은 철학이다. 이제는 지원 구조 자체를 민간의 속도에 맞게 뜯어고치는 '구조 개혁'이 필요하다.",
-    date: "2026. 04. 08",
-    readTime: "6 min read",
-    isNew: false,
-    followUpCount: 0,
+    excerpt: "문화는 통제의 대상이 아니라 지원의 대상이다. 이제는 지원 구조 자체를 민간의 속도에 맞게 뜯어고치는 구조 개혁이 필요하다.",
+    date: "2026. 04. 08", readTime: "6 min read", isNew: false, followUpCount: 0,
   },
   {
     id: "v1-chapter-3",
     vol: "Vol. 1 국가의 뼈대",
     title: "저출산 예산의 재구조화: 현금 살포에서 인프라 구축으로",
-    excerpt: "모든 지자체가 경쟁적으로 출산 장려금을 올리고 있다. 그러나 수십 조 원의 예산이 투입되었음에도 합계출산율은 반등하지 않았다. 우리는 진단부터 틀렸다.",
-    date: "2026. 04. 01",
-    readTime: "9 min read",
-    isNew: false,
-    followUpCount: 0,
+    excerpt: "수십 조 원이 투입되었음에도 합계출산율은 반등하지 않았다. 우리는 진단부터 틀렸다.",
+    date: "2026. 04. 01", readTime: "9 min read", isNew: false, followUpCount: 0,
+  },
+];
+
+const MOCK_CHAPTERS_LOOPOS = [
+  {
+    id: "db-ch-1",
+    vol: "Chapter 1 — 인간상",
+    title: "호모 듀얼브레인: AI 시대의 새로운 인간 정의",
+    excerpt: "AI 시대의 핵심은 인간이 AI에게 대체되는가가 아니다. 인간의 모호한 의도와 AI의 실행 능력을 어떤 구조로 결합할 것인가다. 호모 듀얼브레인은 자기 경험을 흘려보내지 않고 자산화하고, 자기 질문을 구조화하며, 자기 지식을 Agent와 CasePack으로 바꾸는 신인류형 운영자다.",
+    date: "2026. 05. 06", readTime: "8 min read", isNew: true, followUpCount: 12,
+  },
+  {
+    id: "db-ch-2",
+    vol: "Chapter 2 — 인지 문법",
+    title: "TASKFLOW: 프롬프트를 폐기하고 인지 객체를 컴파일하라",
+    excerpt: "자연어 프롬프트는 맥락이 누락되고, 실행마다 결과가 흔들리는 비결정론적 텍스트다. TASKFLOW-CX는 프롬프트를 문장이 아니라 독립된 인지 객체(Object)로 분해하고, CasePack OS가 이를 조립한다. AI 시대의 진짜 문해력은 자기 생각을 실행 가능한 인지 구조로 바꾸는 능력이다.",
+    date: "2026. 05. 04", readTime: "10 min read", isNew: true, followUpCount: 8,
+  },
+  {
+    id: "db-ch-3",
+    vol: "Chapter 3 — 실행 단위",
+    title: "CasePack OS: 지식노동을 재사용 가능한 실행 컨테이너로",
+    excerpt: "한 번의 좋은 답변은 금방 사라진다. CasePack은 역할·상황·과업·입력 지식·주의사항·흐름·톤·출력 계약의 8-Block 구조로, 경험을 재사용 가능한 인지 컨테이너로 만든다. 당신의 판단이 매번 처음부터 시작되지 않도록.",
+    date: "2026. 05. 01", readTime: "7 min read", isNew: false, followUpCount: 5,
+  },
+  {
+    id: "db-ch-4",
+    vol: "Chapter 4 — 교차 지능",
+    title: "PMEE: 독립 에이전트들이 공생하면 가치는 합산이 아닌 곱산이 된다",
+    excerpt: "4세대 에이전트 시스템의 핵심은 하나의 에이전트가 얼마나 똑똑한가가 아니다. 독립 에이전트들이 장기적 공생 관계를 형성하여, 교차 데이터에서 보이지 않던 Cross-Insight를 자동 발견할 때 가치는 n²으로 증폭된다. 이것이 Compounding Moat다.",
+    date: "2026. 04. 28", readTime: "9 min read", isNew: false, followUpCount: 7,
+  },
+  {
+    id: "db-ch-5",
+    vol: "Chapter 5 — 지식 변환",
+    title: "Book-to-Agent: 책의 암묵지를 AI가 실행 가능한 지혜로 컴파일하는 법",
+    excerpt: "책을 요약봇으로 만드는 것이 아니다. 저자의 암묵지를 Primitive Truth Layer로 추출하고, CasePack Runtime으로 컴파일한다. 당신이 읽은 모든 책은 원유다. TASKFLOW는 그것을 B2B 자본으로 정제하는 연금술이다.",
+    date: "2026. 04. 24", readTime: "6 min read", isNew: false, followUpCount: 4,
+  },
+  {
+    id: "db-ch-6",
+    vol: "Chapter 6 — 윤리·회복 OS",
+    title: "PCE 핸드북: 실행력이 강해질수록 더 필요한 멈춤·동의·증거의 철학",
+    excerpt: "TASKFLOW만 있으면 강력하다. 하지만 강력한 실행력은 위험할 수 있다. 자기신뢰 2.0·Δ1mm/day·Pause is Power·Run-Receipt·Consent-First·Co-evolve Manifesto — 호모 듀얼브레인이 무너지지 않고 오래 적응하기 위한 10가지 원칙.",
+    date: "2026. 04. 20", readTime: "11 min read", isNew: false, followUpCount: 9,
   },
 ];
 
@@ -75,6 +111,12 @@ export default async function CanonListPage({ params }: { params: Promise<{ tena
     { id: 'w-ch-3', vol: 'K-Wedding 가이드 · 스냅', title: '본식스냅 계약 전 꼭 확인할 항목은?', excerpt: '본식스냅은 촬영자 수, 촬영 범위(예식·웨딩홀·야외), 보정본 수량, 납기일을 반드시 확인해야 합니다. 특히 당일 대체 촬영자 정책은...', date: '2026. 04. 20', readTime: '6 min read', isNew: false, followUpCount: 0 },
   ];
 
+  const MOCK_BY_VERTICAL: Record<string, typeof MOCK_CHAPTERS_POLITICS> = {
+    wedding: MOCK_WEDDING_CHAPTERS,
+    ai_productivity: MOCK_CHAPTERS_LOOPOS,
+  };
+  const fallbackChapters = MOCK_BY_VERTICAL[(tc.vertical as string)] ?? MOCK_CHAPTERS_POLITICS;
+
   const chapters = hasDB
     ? dbFactCards.map((fc: any, i: number) => ({
         id: fc.id,
@@ -86,7 +128,7 @@ export default async function CanonListPage({ params }: { params: Promise<{ tena
         isNew: i === 0,
         followUpCount: 0,
       }))
-    : (tc.vertical === 'wedding' ? MOCK_WEDDING_CHAPTERS : MOCK_CHAPTERS);
+    : fallbackChapters;
 
   // Fetch garrison follow-up counts
   const { data: postCounts } = await supabase
@@ -190,16 +232,34 @@ export default async function CanonListPage({ params }: { params: Promise<{ tena
         {/* Archive CTA */}
         <div className="mt-20 p-8 bg-white border border-slate-200 rounded-3xl text-center">
           <TrendingUp className="w-8 h-8 text-slate-400 mx-auto mb-4" />
-          <h3 className="font-bold text-slate-800 text-xl mb-2">과거의 지혜를 발굴하다</h3>
-          <p className="text-slate-500 text-sm mb-6">
-            총리님의 과거 기고문과 저서들이 순차적으로 디지털 복원되어 인용 가능한 캐논으로 업데이트됩니다.
-          </p>
-          <Link
-            href={`/${tenantId}/agora/ask`}
-            className="inline-block bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-3 rounded-full font-bold text-sm transition"
-          >
-            ✍️ 시민 기고 작성하기
-          </Link>
+          {(tc.vertical as string) === 'ai_productivity' ? (
+            <>
+              <h3 className="font-bold text-slate-800 text-xl mb-2">당신의 경험을 인지 자산으로</h3>
+              <p className="text-slate-500 text-sm mb-6">
+                Cross-Domain Architect로서 발견한 인사이트를 백서에 기고하세요.<br />
+                경험은 Case가 되고, 질문은 Flow가 되며, 철학은 Agent가 됩니다.
+              </p>
+              <Link
+                href={`/${tenantId}/agora/ask`}
+                className="inline-block bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-full font-bold text-sm transition"
+              >
+                ✍️ 인사이트 기고하기
+              </Link>
+            </>
+          ) : (
+            <>
+              <h3 className="font-bold text-slate-800 text-xl mb-2">과거의 지혜를 발굴하다</h3>
+              <p className="text-slate-500 text-sm mb-6">
+                총리님의 과거 기고문과 저서들이 순차적으로 디지털 복원되어 인용 가능한 캐논으로 업데이트됩니다.
+              </p>
+              <Link
+                href={`/${tenantId}/agora/ask`}
+                className="inline-block bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-3 rounded-full font-bold text-sm transition"
+              >
+                ✍️ 시민 기고 작성하기
+              </Link>
+            </>
+          )}
         </div>
       </main>
     </div>
