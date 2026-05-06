@@ -6,7 +6,8 @@ import { getTenantConfig } from "@/lib/tenant-config";
 import { MobileNav } from "@/components/MobileNav";
 import {
   Newspaper, BookOpen, Landmark, Trophy, MessageSquare,
-  ChevronDown, ExternalLink, FileText, Search
+  ChevronDown, ExternalLink, FileText, Search,
+  Brain, Zap, Shield, Layers, GitMerge, Sparkles
 } from "lucide-react";
 import { StickyHeader } from "@/components/StickyHeader";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -78,6 +79,116 @@ export default async function RootLayout({
           <a href={`/${tenantId}/canon`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">지식 백서 (Canon)</a>
           <a href={`/${tenantId}/bespoke`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-amber-400 transition-colors">
             <Search className="w-4 h-4" /> VIP 매물 의뢰 (Lead)
+          </a>
+        </nav>
+      );
+    }
+
+    // ai_productivity (LoopOS)
+    if ((tc.vertical as string) === "ai_productivity") {
+      return (
+        <nav className="hidden md:flex items-center gap-1 text-sm font-semibold h-full flex-1 justify-center" style={{ color: '#cbd5e1' }}>
+
+          {/* 연재 콘텐츠 */}
+          <div className="group h-full flex items-center relative">
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors hover:bg-white/5" style={{ color: '#cbd5e1' }}>
+              <Brain className="w-4 h-4" style={{ color: '#818cf8' }} />
+              연재 콘텐츠
+              <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:rotate-180 transition-transform duration-200" />
+            </button>
+            <div className="absolute top-full mt-[-1px] left-0 hidden group-hover:block z-50 pt-2">
+              <div className="border shadow-2xl rounded-2xl py-2 min-w-[260px]" style={{ background: '#0f172a', borderColor: 'rgba(99,102,241,0.2)' }}>
+                <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#475569' }}>24회 연재 시리즈</div>
+
+                <a href={`/${tenantId}/webzine?category=homo_dualbrain`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Brain className="w-4 h-4 flex-shrink-0" style={{ color: '#a78bfa' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>호모 듀얼브레인 가이드</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>Vol.1~8 · 인간상·문명스택·PMEE 철학</div>
+                  </div>
+                </a>
+
+                <a href={`/${tenantId}/webzine?category=taskflow`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Zap className="w-4 h-4 flex-shrink-0" style={{ color: '#22d3ee' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>TASKFLOW 실행 가이드</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>Vol.9~16 · 8-Block·CasePack·Book-to-Agent</div>
+                  </div>
+                </a>
+
+                <a href={`/${tenantId}/webzine?category=pce`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Shield className="w-4 h-4 flex-shrink-0" style={{ color: '#34d399' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>PCE 에세이</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>Vol.17~24 · 자기신뢰·멈춤·동의·회복 철학</div>
+                  </div>
+                </a>
+
+                <div className="h-px my-1" style={{ background: 'rgba(99,102,241,0.1)' }} />
+
+                <a href={`/${tenantId}/canon`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <BookOpen className="w-4 h-4 flex-shrink-0" style={{ color: '#818cf8' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>호모 듀얼브레인 백서</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>6 Chapter 정본 · Cross-Domain 인사이트</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 커뮤니티 */}
+          <div className="group h-full flex items-center relative">
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors hover:bg-white/5" style={{ color: '#cbd5e1' }}>
+              <MessageSquare className="w-4 h-4" style={{ color: '#22d3ee' }} />
+              커뮤니티
+              <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:rotate-180 transition-transform duration-200" />
+            </button>
+            <div className="absolute top-full mt-[-1px] left-0 hidden group-hover:block z-50 pt-2">
+              <div className="border shadow-2xl rounded-2xl py-2 min-w-[260px]" style={{ background: '#0f172a', borderColor: 'rgba(34,211,238,0.2)' }}>
+                <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#475569' }}>DUAL-BRAIN 커뮤니티</div>
+
+                <a href={`/${tenantId}/challenges`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Layers className="w-4 h-4 flex-shrink-0" style={{ color: '#818cf8' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>CasePack 퀘스트</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>8-Block 제출 · SCL 검증 · PoK 로열티</div>
+                  </div>
+                </a>
+
+                <a href={`/${tenantId}/challenges?type=book_agent`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <BookOpen className="w-4 h-4 flex-shrink-0" style={{ color: '#a78bfa' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>Book-to-Agent 퀘스트</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>베스트셀러 역공학 · AgentPack 등재</div>
+                  </div>
+                </a>
+
+                <a href={`/${tenantId}/challenges?type=cross_insight`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <GitMerge className="w-4 h-4 flex-shrink-0" style={{ color: '#22d3ee' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>Cross-Domain 인사이트 기고</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>교차 발견 · 백서 Chapter 승격</div>
+                  </div>
+                </a>
+
+                <div className="h-px my-1" style={{ background: 'rgba(34,211,238,0.1)' }} />
+
+                <a href={`/${tenantId}/agora`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <MessageSquare className="w-4 h-4 flex-shrink-0" style={{ color: '#34d399' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>듀얼브레인 Q&amp;A</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>질문·토론·Run-Receipt 공유</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* 데스크 */}
+          <a href={`/${tenantId}/cms`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg font-bold transition-colors" style={{ color: '#818cf8' }}>
+            <Sparkles className="w-4 h-4" />
+            콘텐츠 데스크
           </a>
         </nav>
       );
@@ -208,7 +319,7 @@ export default async function RootLayout({
             />
             {tc.displayName.split(" ")[0]}
             <span className="font-light text-sm hidden sm:inline text-slate-400">
-              {tc.vertical === "clinic_derma" ? "The Interval" : tc.vertical === "sales" ? "공식 카탈로그" : "공식 검증 자료실"}
+            {tc.vertical === "clinic_derma" ? "The Interval" : (tc.vertical as string) === "ai_productivity" ? "Cross-Domain Intelligence OS" : tc.vertical === "sales" ? "공식 카탈로그" : "공식 검증 자료실"}
             </span>
           </a>
 
@@ -259,21 +370,28 @@ export default async function RootLayout({
                   {tc.vertical === "clinic_derma" ? "리셋 솔루션" : "콘텐츠"}
                 </h4>
                 <ul className="space-y-2 text-sm">
-                  {tc.vertical === "clinic_derma" ? (
-                    <>
-                      <li><a href={`/${tenantId}/moments`} className="hover:text-white transition-colors">이럴 때 DR.O</a></li>
-                      <li><a href={`/${tenantId}/compare`} className="hover:text-white transition-colors">메디텐션 vs 메디글로우</a></li>
-                      <li><a href={`/${tenantId}/routines`} className="hover:text-white transition-colors">루틴 가이드</a></li>
-                      <li><a href={`/${tenantId}/products`} className="hover:text-white transition-colors">제품</a></li>
-                    </>
-                  ) : (
-                    <>
-                      <li><a href={`/${tenantId}/webzine`} className="hover:text-white transition-colors">웹진</a></li>
-                      <li><a href={`/${tenantId}/webzine?category=editorial`} className="hover:text-white transition-colors">사설 / 오피니언</a></li>
-                      <li><a href={`/${tenantId}/webzine?category=trend`} className="hover:text-white transition-colors">트렌드 리포트</a></li>
-                      <li><a href={`/${tenantId}/canon`} className="hover:text-white transition-colors">{terminology.canon} (정답카드)</a></li>
-                    </>
-                  )}
+              {(tc.vertical as string) === "ai_productivity" ? (
+                <>
+                  <li><a href={`/${tenantId}/webzine?category=homo_dualbrain`} className="hover:text-white transition-colors">호모 듀얼브레인 가이드 (Vol.1~8)</a></li>
+                  <li><a href={`/${tenantId}/webzine?category=taskflow`} className="hover:text-white transition-colors">TASKFLOW 실행 가이드 (Vol.9~16)</a></li>
+                  <li><a href={`/${tenantId}/webzine?category=pce`} className="hover:text-white transition-colors">PCE 에세이 (Vol.17~24)</a></li>
+                  <li><a href={`/${tenantId}/canon`} className="hover:text-white transition-colors">호모 듀얼브레인 백서</a></li>
+                </>
+              ) : tc.vertical === "clinic_derma" ? (
+                <>
+                  <li><a href={`/${tenantId}/moments`} className="hover:text-white transition-colors">이럴 때 DR.O</a></li>
+                  <li><a href={`/${tenantId}/compare`} className="hover:text-white transition-colors">메디텐션 vs 메디글로우</a></li>
+                  <li><a href={`/${tenantId}/routines`} className="hover:text-white transition-colors">루틴 가이드</a></li>
+                  <li><a href={`/${tenantId}/products`} className="hover:text-white transition-colors">제품</a></li>
+                </>
+              ) : (
+                <>
+                  <li><a href={`/${tenantId}/webzine`} className="hover:text-white transition-colors">웹진</a></li>
+                  <li><a href={`/${tenantId}/webzine?category=editorial`} className="hover:text-white transition-colors">사설 / 오피니언</a></li>
+                  <li><a href={`/${tenantId}/webzine?category=trend`} className="hover:text-white transition-colors">트렌드 리포트</a></li>
+                  <li><a href={`/${tenantId}/canon`} className="hover:text-white transition-colors">{terminology.canon} (정답카드)</a></li>
+                </>
+              )}
                 </ul>
               </div>
 
@@ -283,19 +401,26 @@ export default async function RootLayout({
                   {tc.vertical === "clinic_derma" ? "Trust & 전문가" : "커뮤니티"}
                 </h4>
                 <ul className="space-y-2 text-sm">
-                  {tc.vertical === "clinic_derma" ? (
-                    <>
-                      <li><a href={`/${tenantId}/canon?category=trust_evidence`} className="hover:text-white transition-colors">Clinic Logic 백서</a></li>
-                      <li><a href={`/${tenantId}/canon?category=brand_truth`} className="hover:text-white transition-colors">DR.O란?</a></li>
-                      <li><a href={`/${tenantId}/cms/desk`} className="hover:text-white transition-colors">Boundary Guard Desk</a></li>
-                    </>
-                  ) : (
-                    <>
-                      <li><a href={`/${tenantId}/experts`} className="hover:text-white transition-colors">전문가 네트워크</a></li>
-                      <li><a href={`/${tenantId}/challenges`} className="hover:text-white transition-colors">챌린지</a></li>
-                      <li><a href={`/${tenantId}/agora`} className="hover:text-white transition-colors">{terminology.agora}</a></li>
-                    </>
-                  )}
+              {(tc.vertical as string) === "ai_productivity" ? (
+                <>
+                  <li><a href={`/${tenantId}/challenges`} className="hover:text-white transition-colors">CasePack 퀘스트</a></li>
+                  <li><a href={`/${tenantId}/challenges?type=book_agent`} className="hover:text-white transition-colors">Book-to-Agent 퀘스트</a></li>
+                  <li><a href={`/${tenantId}/challenges?type=cross_insight`} className="hover:text-white transition-colors">Cross-Domain 인사이트</a></li>
+                  <li><a href={`/${tenantId}/agora`} className="hover:text-white transition-colors">듀얼브레인 Q&amp;A</a></li>
+                </>
+              ) : tc.vertical === "clinic_derma" ? (
+                <>
+                  <li><a href={`/${tenantId}/canon?category=trust_evidence`} className="hover:text-white transition-colors">Clinic Logic 백서</a></li>
+                  <li><a href={`/${tenantId}/canon?category=brand_truth`} className="hover:text-white transition-colors">DR.O란?</a></li>
+                  <li><a href={`/${tenantId}/cms/desk`} className="hover:text-white transition-colors">Boundary Guard Desk</a></li>
+                </>
+              ) : (
+                <>
+                  <li><a href={`/${tenantId}/experts`} className="hover:text-white transition-colors">전문가 네트워크</a></li>
+                  <li><a href={`/${tenantId}/challenges`} className="hover:text-white transition-colors">챌린지</a></li>
+                  <li><a href={`/${tenantId}/agora`} className="hover:text-white transition-colors">{terminology.agora}</a></li>
+                </>
+              )}
                 </ul>
               </div>
 
