@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, MapPin, DollarSign, Building, ArrowRight, ShieldCheck, Compass, Home, Coffee } from 'lucide-react';
+import { Search, MapPin, DollarSign, Building, ArrowRight, ShieldCheck, Compass, Home, Coffee, Waves } from 'lucide-react';
 import { getTenantConfig } from "@/lib/tenant-config";
 
 export default async function BespokeLeadWizard({ params }: { params: Promise<{ tenant: string }> }) {
