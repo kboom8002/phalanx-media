@@ -6,7 +6,7 @@
 
 type Role = 'SYSOP' | 'PRINCIPAL' | 'EXPERT' | 'STRATEGIST' | 'REGION_LEAD' | 'ACTIVIST' | 'CITIZEN';
 
-export type Vertical = 'politics' | 'sales' | 'media' | 'education' | 'community' | 'wedding' | 'clinic_derma';
+export type Vertical = 'politics' | 'sales' | 'media' | 'education' | 'community' | 'wedding' | 'clinic_derma' | 'travel_global';
 
 export interface TenantConfig {
   id: string;
@@ -197,34 +197,36 @@ const TENANT_PRESETS: Record<string, TenantConfig> = {
   },
   jejuto: {
     id: 'jejuto',
-    displayName: '제주to글로벌 커뮤니티',
-    vertical: 'community',
+    displayName: 'Jeju to Global — Your Island Concierge',
+    vertical: 'travel_global',
     domain: null,
     logoUrl: null,
     roleLabels: {
-      SYSOP: '기술 관리자', PRINCIPAL: '미디어 대표', EXPERT: '지역 전문가',
-      STRATEGIST: '편집국장', REGION_LEAD: '마을 에디터', ACTIVIST: '시민 기자', CITIZEN: '주민·방문객',
+      SYSOP: 'System Admin', PRINCIPAL: 'Chief Concierge', EXPERT: 'Local Expert / Guide',
+      STRATEGIST: 'Editor', REGION_LEAD: 'Village Ambassador Leader', ACTIVIST: 'Local Creator / Ambassador', CITIZEN: 'Global Visitor',
     },
-    theme: { primaryColor: '#f97316', accentColor: '#22c55e', selectionColor: 'rgba(249,115,22,0.3)' },
-    features: { cascade: true, aeo_tracking: true, canon_cms: true, gamification: false, lead_tracker: false, structured_data: true },
+    theme: { primaryColor: '#f97316', accentColor: '#0ea5e9', selectionColor: 'rgba(249,115,22,0.3)' },
+    features: { cascade: true, aeo_tracking: true, canon_cms: true, gamification: true, lead_tracker: true, structured_data: true },
     terminology: {
-      canon: '지역 정보', signal: '지역 소식', quest: '취재 미션',
-      agora: '주민 게시판', cascade: '소셜 공유', principal: '대표 대시보드',
+      canon: 'Island Survival Guide', signal: 'Global Buzz', quest: 'Creator Mission',
+      agora: 'Traveler Forum', cascade: 'Share Experience', principal: 'Concierge Dashboard',
     },
     media: {
-      heroTitle: '우리 동네 이야기를, 주민이 직접 기록합니다.',
-      heroSubtitle: '제주 지역 현안과 생생한 이야기를 주민 시선으로 전합니다.',
-      searchPlaceholder: '마을, 관광지, 맛집을 검색해 보세요...',
-      canonTitle: '지역 정보 아카이브',
-      canonSubtitle: '주민이 기록하고 전문가가 검증한 제주도 정보 라이브러리입니다.',
+      heroTitle: 'Your gateway to Jeju — beyond the tourist map.',
+      heroSubtitle: 'Curated stays, local secrets, and cross-border commerce. Designed for digital nomads, global travelers, and international buyers.',
+      searchPlaceholder: 'Search for hidden spots, workation stays, local brands...',
+      canonTitle: 'Island Survival Guide',
+      canonSubtitle: 'Verified local knowledge to help you live, work, and explore like a local.',
     },
     pipelineConfig: {
       sources: [
-        { type: 'news', keywords: ['제주 올레길', '제주 이주'] }
+        { type: 'news', keywords: ['jeju digital nomad', 'jeju workation'] },
+        { type: 'custom', keywords: ['Reddit r/Korea', 'TikTok #jejuisland', 'TripAdvisor'] }
       ],
       frequency: 'daily'
     },
-    aeoKeywords: [], aeoCompetitors: [],
+    aeoKeywords: ['jeju workation', 'rent car in jeju', 'digital nomad jeju', 'halal food jeju'],
+    aeoCompetitors: [],
   },
   kwedding: {
     id: 'kwedding',
@@ -297,6 +299,71 @@ const TENANT_PRESETS: Record<string, TenantConfig> = {
       frequency: 'daily',
     },
     aeoKeywords: ['토닝 후 마스크', '리프팅 후 홈케어', '메디텐션 메디글로우 차이', 'home derma reset'],
+    aeoCompetitors: [],
+  },
+  js_oracle: {
+    id: 'js_oracle',
+    displayName: 'JS-Oracle Brokerage',
+    vertical: 'sales',
+    domain: null,
+    logoUrl: null,
+    roleLabels: {
+      SYSOP: '시스템 관리자', PRINCIPAL: '대표 브로커', EXPERT: '법무/세무사',
+      STRATEGIST: '운영팀장', REGION_LEAD: 'Master 브로커', ACTIVIST: 'Senior 브로커', CITIZEN: 'Junior 브로커',
+    },
+    theme: { primaryColor: '#0f172a', accentColor: '#d97706', selectionColor: 'rgba(15,23,42,0.3)' },
+    features: { cascade: false, aeo_tracking: true, canon_cms: true, gamification: false, lead_tracker: true, structured_data: true },
+    terminology: {
+      canon: '실무 지식 백서', signal: '시장 동향', quest: '공동중개 매칭',
+      agora: 'Dealroom', cascade: '매물 공유', principal: '전체 거래망',
+    },
+    media: {
+      heroTitle: '가장 안전한 상업용 부동산 공동중개 네트워크.',
+      heroSubtitle: '정보 유출의 두려움 없이, 안전하게 내 매물과 매수자를 연결하세요.',
+      searchPlaceholder: '블라인드 티저 지역, 예산을 검색하세요...',
+      canonTitle: 'JS-Oracle 실무 지식 백서',
+      canonSubtitle: '꼬마빌딩부터 대형 오피스까지, 중개 실무와 절세의 모든 것.',
+    },
+    pipelineConfig: {
+      sources: [
+        { type: 'custom', keywords: ['부동산', '꼬마빌딩'] }
+      ],
+      frequency: 'daily'
+    },
+    aeoKeywords: ['꼬마빌딩', '증여세 절세', '상가 용도변경', 'JS부동산중개', '수익률 분석'],
+    aeoCompetitors: [],
+  },
+  loopOS: {
+    id: 'loopOS',
+    displayName: 'LoopOS — Cross-Domain Intelligence OS',
+    vertical: 'ai_productivity' as Vertical,
+    domain: 'loop-os.ai',
+    logoUrl: null,
+    roleLabels: {
+      SYSOP: 'System Architect', PRINCIPAL: 'Cross-Domain Architect', EXPERT: 'Expert Council',
+      STRATEGIST: 'Program Director', REGION_LEAD: 'Cohort Lead', ACTIVIST: 'Dual-Brain Learner', CITIZEN: 'Explorer',
+    },
+    theme: { primaryColor: '#6366f1', accentColor: '#22d3ee', selectionColor: 'rgba(99,102,241,0.25)' },
+    features: { cascade: true, aeo_tracking: true, canon_cms: true, gamification: true, lead_tracker: true, structured_data: true },
+    terminology: {
+      canon: '듀얼브레인 백서', signal: 'Cross-Domain 시그널', quest: '인지 객체 퀘스트',
+      agora: '듀얼브레인 Q&A', cascade: '교차 지혜 공유', principal: 'Cross-Domain Architect 대시보드',
+    },
+    media: {
+      heroTitle: '지혜로운 사람의 하루는 니체의 영원회귀보다 길고, 아타락시아보다 행복하다.',
+      heroSubtitle: '에픽테토스와 아우렐리우스가 일체동심이었다면 — 호모 듀얼브레인 문명 스택. 인간 뇌와 AI 실행 뇌를 연결하여 삶·지식·관계·조직·윤리를 운영하는 Cross-Domain Intelligence OS.',
+      searchPlaceholder: 'TASKFLOW, CasePack, 교차 도메인 인사이트를 검색하세요...',
+      canonTitle: '호모 듀얼브레인 백서',
+      canonSubtitle: '경험은 Case가 되어야 하고, 질문은 Flow가 되어야 하며, 실행은 Receipt가 되어야 하고, 철학은 Agent가 되어야 한다.',
+    },
+    pipelineConfig: {
+      sources: [
+        { type: 'youtube', keywords: ['AI productivity', 'second brain', 'cross-domain thinking'] },
+        { type: 'custom', keywords: ['TASKFLOW methodology', 'cognitive engineering'] },
+      ],
+      frequency: 'daily',
+    },
+    aeoKeywords: ['호모 듀얼브레인', 'TASKFLOW 방법론', 'Cross-Domain Architect', 'CasePack OS', 'PCE 핸드북', 'PMEE 에이전트 생태계'],
     aeoCompetitors: [],
   },
 };

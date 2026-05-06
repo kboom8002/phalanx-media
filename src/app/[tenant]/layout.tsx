@@ -6,7 +6,7 @@ import { getTenantConfig } from "@/lib/tenant-config";
 import { MobileNav } from "@/components/MobileNav";
 import {
   Newspaper, BookOpen, Landmark, Trophy, MessageSquare,
-  ChevronDown, ExternalLink, FileText,
+  ChevronDown, ExternalLink, FileText, Search
 } from "lucide-react";
 import { StickyHeader } from "@/components/StickyHeader";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -69,7 +69,34 @@ export default async function RootLayout({
       );
     }
 
-    // Default (politics, media, community, sales, education…)
+    // sales (JS-Oracle)
+    if (tc.vertical === "sales") {
+      return (
+        <nav className="hidden md:flex items-center gap-1 text-sm font-semibold h-full flex-1 justify-center text-slate-300">
+          <a href={`/${tenantId}`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">홈</a>
+          <a href={`/${tenantId}/teasers`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">프리미엄 티저 갤러리</a>
+          <a href={`/${tenantId}/canon`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">지식 백서 (Canon)</a>
+          <a href={`/${tenantId}/bespoke`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-amber-400 transition-colors">
+            <Search className="w-4 h-4" /> VIP 매물 의뢰 (Lead)
+          </a>
+        </nav>
+      );
+    }
+
+    // travel_global (jejuto)
+    if (tc.vertical === "travel_global") {
+      return (
+        <nav className="hidden md:flex items-center gap-1 text-sm font-semibold h-full flex-1 justify-center text-slate-700">
+          <a href={`/${tenantId}`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors">Home</a>
+          <a href={`/${tenantId}/bespoke`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors">Stays</a>
+          <a href={`/${tenantId}/canon`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors">Guide</a>
+          <a href={`/${tenantId}/cases`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors">Stories</a>
+          <a href={`/${tenantId}/brands`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-indigo-600 bg-indigo-50">B2B Trade</a>
+        </nav>
+      );
+    }
+
+    // Default (politics, media, community, education…)
     return (
       <nav className="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-700 h-full flex-1 justify-center">
         {/* Group 1: 콘텐츠 */}

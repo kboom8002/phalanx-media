@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 import { getTenantConfig } from "@/lib/tenant-config";
 import WeddingHome from "@/components/WeddingHome";
 import DROHome from "@/components/DROHome";
+import JejutoHome from "@/components/JejutoHome";
+import LoopOSHome from "@/components/LoopOSHome";
 
 // 1. AEO-Friendly Metadata Update for Index
 export const metadata: Metadata = {
@@ -54,6 +56,16 @@ export default async function Home({ params }: { params: Promise<{ tenant: strin
   // clinic_derma vertical: DR.O Answer Hub
   if (tc.vertical === 'clinic_derma') {
     return <DROHome tc={tc} tenantId={tenantId} osUrl={osUrl} />;
+  }
+
+  // travel_global vertical: Jejuto Home
+  if (tc.vertical === 'travel_global') {
+    return <JejutoHome tc={tc} tenantId={tenantId} osUrl={osUrl} />;
+  }
+
+  // ai_productivity vertical: LoopOS Homo Dual-Brain Home
+  if ((tc.vertical as string) === 'ai_productivity') {
+    return <LoopOSHome tc={tc} tenantId={tenantId} osUrl={osUrl} />;
   }
 
   // Demo fallback data — used when Supabase is unreachable or env vars are placeholder
