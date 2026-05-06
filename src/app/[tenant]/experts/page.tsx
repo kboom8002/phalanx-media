@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, ShieldCheck, Landmark, Award } from "lucide-react";
+import { PoKBadge } from "@/components/OntologyBadges";
 
 export const metadata = {
   title: "전문가 Authority 네트워크 | Phalanx Media",
@@ -11,6 +12,20 @@ function getAuthorityTier(score: number) {
   if (score >= 75) return { label: 'Gold', color: 'text-amber-700', bgColor: 'bg-amber-50', borderColor: 'border-amber-200', emoji: '🥇' };
   if (score >= 55) return { label: 'Silver', color: 'text-slate-600', bgColor: 'bg-slate-100', borderColor: 'border-slate-200', emoji: '🥈' };
   return { label: 'Bronze', color: 'text-orange-600', bgColor: 'bg-orange-50', borderColor: 'border-orange-200', emoji: '🥉' };
+}
+
+// Authority Score를 PoK Level로 변환 (1:1 매핑)
+function scoreToPokLevel(score: number): string {
+  if (score >= 90) return 'canon_architect';
+  if (score >= 75) return 'authority';
+  if (score >= 55) return 'expert';
+  if (score >= 30) return 'practitioner';
+  return 'learner';
+}
+
+// Authority Score → PoK Score 근사값
+function scoreToPoK(score: number): number {
+  return Math.round(score * 120); // 90점 → 10,800 PoK
 }
 
 const EXPERTS = [
@@ -81,7 +96,15 @@ export default async function ExpertsRosterPage({ params }: { params: Promise<{ 
                         {expert.name} <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                       </h3>
                       <div className="text-sm text-slate-800 font-bold mb-1">{expert.title}</div>
-                      <div className="text-xs text-slate-500 mb-6">{expert.institution}</div>
+                      <div className="text-sm text-slate-500 mb-6">{expert.institution}</div>
+                      
+                      {/* PoK Level 배지 — phalanx-os 온톨로지 기여 수치 */}
+                      <div className="flex justify-center mb-4">
+                        <PoKBadge
+                          level={scoreToPokLevel(expert.score)}
+                          score={scoreToPoK(expert.score)}
+                        />
+                      </div>
                       
                       <div className="w-8 h-px bg-slate-200 mx-auto mb-6 group-hover:bg-indigo-300 transition-colors"></div>
                       

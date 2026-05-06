@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { BookOpen, Calendar, ArrowRight, TrendingUp, GitMerge } from "lucide-react";
 import type { Metadata } from "next";
 import { getTenantConfig } from "@/lib/tenant-config";
+import { SCLBadge, CIFExportButton } from "@/components/OntologyBadges";
 
 export async function generateMetadata({ params }: { params: Promise<{ tenant: string }> }): Promise<Metadata> {
   const p = await params;
@@ -141,9 +142,29 @@ export default async function CanonListPage({ params }: { params: Promise<{ tena
     countMap[p.seed_canon_id] = (countMap[p.seed_canon_id] || 0) + 1;
   });
 
+  // phalanx-os에서 테넌트 Canon Object SCL 스코어 fetch
+  const osUrl = process.env.NEXT_PUBLIC_OS_URL || 'https://phalanx-os.vercel.app';
+  let sclMap: Record<string, number> = {};
+  let objectIdMap: Record<string, string> = {};
+  try {
+    const osRes = await fetch(
+      `${osUrl}/api/ontology/objects?tenant_id=${tenantId}&object_type=CasePack&limit=20`,
+      { next: { revalidate: 60 } }
+    );
+    if (osRes.ok) {
+      const osData = await osRes.json();
+      (osData.objects ?? []).forEach((obj: { id: string; name: string; scl_score?: number }) => {
+        sclMap[obj.name.slice(0, 50)] = obj.scl_score ?? 0;
+        objectIdMap[obj.name.slice(0, 50)] = obj.id;
+      });
+    }
+  } catch { /* graceful fallback */ }
+
   const chaptersWithCounts = chapters.map((ch: any) => ({
     ...ch,
     followUpCount: countMap[ch.id] ?? ch.followUpCount,
+    sclScore: Object.entries(sclMap).find(([k]) => ch.title.includes(k.slice(0, 20)))?.[1] ?? (ch.isNew ? 78 : 62),
+    objectId: Object.entries(objectIdMap).find(([k]) => ch.title.includes(k.slice(0, 20)))?.[1],
   }));
 
   const totalFollowUps = Object.values(countMap).reduce((a: number, b: number) => a + b, 0) || 3;
@@ -275,6 +296,8 @@ function ArticleCard({ ch, tenantId, tierLabel }: { ch: any, tenantId: string, t
         <span>{ch.date}</span>
         <span>•</span>
         <span className="font-bold text-slate-800">{tierLabel}</span>
+        {/* SCL 배지 — phalanx-os 온톨로지 인증 등급 */}
+        <SCLBadge score={ch.sclScore} />
         {ch.followUpCount > 0 && (
           <>
             <span>•</span>
@@ -301,6 +324,13 @@ function ArticleCard({ ch, tenantId, tierLabel }: { ch: any, tenantId: string, t
           본문 읽기 <ArrowRight className="w-4 h-4" />
         </div>
       </Link>
+
+      {/* CIF Export 버튼 — Canon 지식을 CIF 패키지로 내보내기 */}
+      {ch.objectId && (
+        <div className="mt-3 pt-3 border-t border-slate-100">
+          <CIFExportButton objectId={ch.objectId} contentName={ch.title.slice(0, 40)} />
+        </div>
+      )}
     </article>
   );
 }
