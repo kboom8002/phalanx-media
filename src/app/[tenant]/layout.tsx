@@ -75,14 +75,51 @@ export default async function RootLayout({
       return (
         <nav className="hidden md:flex items-center gap-1 text-sm font-semibold h-full flex-1 justify-center text-slate-300">
           <a href={`/${tenantId}`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">홈</a>
-          <a href={`/${tenantId}/teasers`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">프리미엄 티저 갤러리</a>
-          <a href={`/${tenantId}/canon`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">지식 백서 (Canon)</a>
+          <a href={`/${tenantId}/teasers`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">프리미엄 티저</a>
+          <a href={`/${tenantId}/canon`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">지식 백서</a>
           <a href={`/${tenantId}/bespoke`} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-amber-400 transition-colors">
-            <Search className="w-4 h-4" /> VIP 매물 의뢰 (Lead)
+            <Search className="w-4 h-4" /> VIP 매물 의뢰
           </a>
+
+          {/* 지식 거래소 드롭다운 */}
+          <div className="group h-full flex items-center relative">
+            <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg transition-colors hover:bg-slate-800 hover:text-white" style={{ color: '#f59e0b' }}>
+              <Landmark className="w-4 h-4" />
+              지식 거래소
+              <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:rotate-180 transition-transform duration-200" />
+            </button>
+            <div className="absolute top-full mt-[-1px] left-0 hidden group-hover:block z-50 pt-2">
+              <div className="border shadow-2xl rounded-2xl py-2 min-w-[250px]" style={{ background: '#0f172a', borderColor: 'rgba(245,158,11,0.2)' }}>
+                <div className="px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest" style={{ color: '#475569' }}>IP 해자 지식 생태계</div>
+                <a href={`/${tenantId}/marketplace`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Trophy className="w-4 h-4 flex-shrink-0" style={{ color: '#f59e0b' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>지식 마켓플레이스</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>SCL 인증 CasePack 탐색·Fork</div>
+                  </div>
+                </a>
+                <a href={`/${tenantId}/patterns`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <Layers className="w-4 h-4 flex-shrink-0" style={{ color: '#a78bfa' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>성공 패턴 라이브러리</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>딜 성사 패턴 · 반패턴 경고</div>
+                  </div>
+                </a>
+                <div className="h-px my-1" style={{ background: 'rgba(245,158,11,0.1)' }} />
+                <a href={`/${tenantId}/exchange`} className="flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors hover:bg-white/5">
+                  <GitMerge className="w-4 h-4 flex-shrink-0" style={{ color: '#34d399' }} />
+                  <div>
+                    <div className="font-semibold" style={{ color: '#e2e8f0' }}>KGIP 지식 교환소</div>
+                    <div className="text-xs" style={{ color: '#64748b' }}>크로스-Org CIF 교환 · CrossInsight</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
         </nav>
       );
     }
+
 
     // ai_productivity (LoopOS)
     if ((tc.vertical as string) === "ai_productivity") {

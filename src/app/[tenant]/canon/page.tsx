@@ -4,6 +4,7 @@ import { BookOpen, Calendar, ArrowRight, TrendingUp, GitMerge } from "lucide-rea
 import type { Metadata } from "next";
 import { getTenantConfig } from "@/lib/tenant-config";
 import { SCLBadge, CIFExportButton } from "@/components/OntologyBadges";
+import KnowledgeLineageDAG from "@/components/KnowledgeLineageDAGClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ tenant: string }> }): Promise<Metadata> {
   const p = await params;
@@ -283,6 +284,18 @@ export default async function CanonListPage({ params }: { params: Promise<{ tena
           )}
         </div>
       </main>
+
+      {/* ⑧ Knowledge Lineage DAG — 지식 족보 시각화 */}
+      <section style={{ maxWidth: 960, margin: '0 auto', padding: '48px 16px 64px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)', color: '#6366f1', borderRadius: 999, padding: '4px 14px', fontSize: 12, fontWeight: 700, marginBottom: 12 }}>
+            <GitMerge style={{ width: 12, height: 12 }} /> 지식 족보 (Knowledge Lineage)
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 8 }}>이 지식은 어떻게 진화했는가</h2>
+          <p style={{ fontSize: 13, color: '#64748b' }}>CasePack이 IM으로, IM이 딜 성사 패턴으로, 패턴이 CrossInsight로 이어지는 지식의 족보를 시각화합니다.</p>
+        </div>
+        <KnowledgeLineageDAG tenantId={tenantId} height={420} />
+      </section>
     </div>
   );
 }

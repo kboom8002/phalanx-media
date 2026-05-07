@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Brain, Zap, Layers, BookOpen, Sparkles, Shield, ArrowRight, Search } from "lucide-react";
 import type { TenantConfig } from "@/lib/tenant-config";
+import CrossInsightSection from "./CrossInsightSection";
 
 const STACK = [
   { icon: "🧠", label: "인간상", title: "호모 듀얼브레인", desc: "인간 뇌 + AI 실행 뇌를 연결하는 신인류형 운영자", color: "#a855f7" },
@@ -156,6 +157,9 @@ export default function LoopOSHome({ tc, tenantId, osUrl }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Cross-Domain 인사이트 섹션 */}
+      <CrossInsightSection tenantId={tenantId} />
 
       {/* Final Statement */}
       <section className="px-4 py-20 text-center">
